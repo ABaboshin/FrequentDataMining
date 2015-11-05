@@ -1,2 +1,2 @@
 # FrequentDataMining
-A set of algorithms for Fequent Data Mining 
+Currently only the Apriori algorithm (and a sample for it) is implemented. 
