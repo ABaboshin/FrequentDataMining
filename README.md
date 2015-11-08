@@ -1,2 +1,8 @@
 # FrequentDataMining
-Currently only the Apriori algorithm (and a sample for it) is implemented. 
+
+The following algorthms are implemented:
+* Aprioiri
+* FPGrowth
+* Agrawal fast mining association rules
+
+There are also samples for it.
