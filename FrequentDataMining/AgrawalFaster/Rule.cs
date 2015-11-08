@@ -6,19 +6,24 @@ using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
 
-namespace FrequentDataMining.Apriori
+namespace FrequentDataMining.AgrawalFaster
 {
     public class Rule<T> : IComparable<Rule<T>> where T : IComparable<T>, IEquatable<T>
     {
         public List<T> Combination { get; private set; }
+
         public List<T> Remaining { get; private set; }
+
         public double Confidence { get; private set; }
 
-        public Rule(List<T> combination, List<T> remaining, double confidence)
+        public double Lift { get; private set; }
+
+        public Rule(List<T> combination, List<T> remaining, double confidence, double lift)
         {
             Combination = combination;
             Remaining = remaining;
             Confidence = confidence;
+            Lift = lift;
         }
 
         public int CompareTo(Rule<T> other)

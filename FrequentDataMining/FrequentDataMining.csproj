@@ -40,12 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgrawalFaster\AgrawalFaster.cs" />
     <Compile Include="Apriori\Apriori.cs" />
-    <Compile Include="Apriori\FrequentItemsCollection.cs" />
     <Compile Include="Common\Itemset.cs" />
     <Compile Include="Common\ListExtensions.cs" />
-    <Compile Include="Apriori\Output.cs" />
-    <Compile Include="Apriori\Rule.cs" />
+    <Compile Include="AgrawalFaster\Rule.cs" />
     <Compile Include="Common\Sorter.cs" />
     <Compile Include="FPGrowth\FPGrowth.cs" />
     <Compile Include="FPGrowth\FPNode.cs" />

@@ -10,7 +10,7 @@ namespace FrequentDataMining.FPGrowth
 {
     public class FPGrowth<T> where T : class, IComparable<T>, IEquatable<T>
     {
-        public void ProcessTransactions(double minSupport, List<List<T>> transactions)
+        public List<Itemset<T>> ProcessTransactions(double minSupport, List<List<T>> transactions)
         {
             Result = new List<Itemset<T>>();
 
@@ -33,6 +33,8 @@ namespace FrequentDataMining.FPGrowth
             nodeBuffer = ListExtensions.Allocate<FPNode<T>>(BufferSize);
 
             Run(tree, ListExtensions.Allocate<T>(BufferSize), 0, transactions.Count(), mapSupport);
+
+            return Result;
         }
 
         /// <summary>

@@ -9,15 +9,19 @@ namespace FrequentDataMining.Common
 {
     internal static class ListExtensions
     {
-        public static bool Equal<T>(this List<T> a, List<T> b) where T : IEquatable<T> {
+        public static bool Equal<T>(this List<T> a, List<T> b) where T : IEquatable<T>, IComparable<T>
+        {
             if (a.Count() != b.Count())
             {
                 return false;
             }
 
-            for (int i = 0; i < a.Count(); i++)
+            var n1 = new Sorter<T>().Sort(a).ToList();
+            var n2 = new Sorter<T>().Sort(b).ToList();
+
+            for (var i = 0; i < n1.Count(); i++)
             {
-                if (!a[i].Equals(b[i]))
+                if (!n1[i].Equals(n2[i]))
                 {
                     return false;
                 }

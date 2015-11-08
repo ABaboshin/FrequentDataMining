@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using FrequentDataMining.AgrawalFaster;
 using FrequentDataMining.Apriori;
 using SamplesCommon;
 
@@ -28,18 +29,20 @@ namespace AprioriSample
             
             var data = new SampleHelper();
 
-            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, 0.01, data.Items, data.Transactions);
-            foreach (var item in result.FrequentItems.Values.OrderByDescending(v => v.Support))
+            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, /*0.01, 0.01, data.Items,*/ data.Transactions);
+            foreach (var item in result.OrderByDescending(v => v.Support))
             {
                 Console.WriteLine(string.Join("; ", item.Value.OrderBy(i => i.Name)) + " #SUP: " + item.Support);
             }
 
-            //Console.WriteLine("====");
+            var agrawal = new AgrawalFaster<BookAuthor>();
+            var ar = agrawal.Run(0.01, 0.01, result, data.Transactions.Count);
+            Console.WriteLine("====");
 
-            //foreach (var item in result.StrongRules.OrderByDescending(r => r.Confidence))
-            //{
-            //    Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> " + item.Confidence);
-            //}
+            foreach (var item in ar.OrderByDescending(r => r.Confidence))
+            {
+                Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> Confidence: " + item.Confidence + " Lift: " + item.Lift);
+            }
 
             Console.ReadLine();
         }
