@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FrequentDataMining.Common;
 
 namespace FrequentDataMining.Apriori
 {
@@ -67,11 +68,9 @@ namespace FrequentDataMining.Apriori
             }
         }
 
-        private double GetConfidence(List<T> X, List<T> XY, FrequentItemsCollection<T> allFrequentItems)
+        double GetConfidence(List<T> X, List<T> XY, FrequentItemsCollection<T> allFrequentItems)
         {
-            double supportX = allFrequentItems[X].Support;
-            double supportXY = allFrequentItems[XY].Support;
-            return supportXY / supportX;
+            return (double)allFrequentItems[XY].Support / (double)allFrequentItems[X].Support;
         }
 
         HashSet<Rule<T>> GenerateRules(FrequentItemsCollection<T> allFrequentItems)
@@ -82,13 +81,13 @@ namespace FrequentDataMining.Apriori
             {
                 var item = allFrequentItems[idx];
 
-                if (item.Name.Count() > 1)
+                if (item.Value.Count() > 1)
                 {
-                    var subsetsList = GenerateSubsets(item.Name);
+                    var subsetsList = GenerateSubsets(item.Value);
 
                     foreach (var subset in subsetsList)
                     {
-                        var remaining = GetRemaining(subset, item.Name);
+                        var remaining = GetRemaining(subset, item.Value);
                         var rule = new Rule<T>(subset, remaining, 0);
 
                         if (rulesList.All(r=>!r.Equals(rule)))
@@ -147,32 +146,32 @@ namespace FrequentDataMining.Apriori
             }
         }
 
-        List<Item<T>> GetFrequentItems(IDictionary<List<T>, double> candidates, double minSupport, double transactionsCount)
+        List<Itemset<T>> GetFrequentItems(IDictionary<List<T>, double> candidates, double minSupport, double transactionsCount)
         {
-            var frequentItems = new List<Item<T>>();
+            var frequentItems = new List<Itemset<T>>();
 
             foreach (var item in candidates)
             {
                 if (item.Value / transactionsCount >= minSupport)
                 {
-                    frequentItems.Add(new Item<T> { Name = item.Key, Support = item.Value });
+                    frequentItems.Add(new Itemset<T> { Value = item.Key, Support = (int)item.Value });
                 }
             }
 
             return frequentItems;
         }
 
-        private Dictionary<List<T>, double> GenerateCandidates(IList<Item<T>> frequentItems, IEnumerable<List<T>> transactions)
+        private Dictionary<List<T>, double> GenerateCandidates(IList<Itemset<T>> frequentItems, IEnumerable<List<T>> transactions)
         {
             var candidates = new Dictionary<List<T>, double>();
 
             for (int i = 0; i < frequentItems.Count - 1; i++)
             {
-                var firstItem = new Sorter<T>().Sort(frequentItems[i].Name);
+                var firstItem = new Sorter<T>().Sort(frequentItems[i].Value);
 
                 for (int j = i + 1; j < frequentItems.Count; j++)
                 {
-                    var secondItem = new Sorter<T>().Sort(frequentItems[j].Name);
+                    var secondItem = new Sorter<T>().Sort(frequentItems[j].Value);
                     var generatedCandidate = GenerateCandidate(firstItem, secondItem);
 
                     if (generatedCandidate.Any())
@@ -208,9 +207,9 @@ namespace FrequentDataMining.Apriori
             }
         }
 
-        List<Item<T>> GetL1FrequentItems(double minSupport, IEnumerable<T> items, IEnumerable<List<T>> transactions)
+        List<Itemset<T>> GetL1FrequentItems(double minSupport, IEnumerable<T> items, IEnumerable<List<T>> transactions)
         {
-            var frequentItemsL1 = new List<Item<T>>();
+            var frequentItemsL1 = new List<Itemset<T>>();
             var transactionsCount = transactions.Count();
 
             foreach (var item in items)
@@ -219,7 +218,7 @@ namespace FrequentDataMining.Apriori
 
                 if (support / transactionsCount >= minSupport)
                 {
-                    frequentItemsL1.Add(new Item<T> { Name = new List<T> { item }, Support = support });
+                    frequentItemsL1.Add(new Itemset<T> { Value = new List<T> { item }, Support = (int)support });
                 }
             }
             frequentItemsL1.Sort();

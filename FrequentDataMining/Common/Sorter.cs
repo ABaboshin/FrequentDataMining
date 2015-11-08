@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FrequentDataMining.Apriori
+namespace FrequentDataMining.Common
 {
-    class Sorter<T> where T : IComparable<T>
+    internal class Sorter<T> where T : IComparable<T>
     {
         public List<T> Sort(List<T> token) {
             var tmp = token.ToList();

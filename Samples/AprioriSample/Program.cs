@@ -2,9 +2,9 @@
 // (c) 2015, Andrey Baboshin
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Apriori;
+using SamplesCommon;
 
 namespace AprioriSample
 {
@@ -25,43 +25,21 @@ namespace AprioriSample
             2. What we can advise the user, basing on his shopping cart. It is ordered by probability (frequent).
 
             */
-            var ba1 = new BookAuthor("Orwell");
-            var ba2 = new BookAuthor("Kafka");
-            var ba3 = new BookAuthor("Hesse");
-            var ba4 = new BookAuthor("Tucholsky");
-            var ba5 = new BookAuthor("Remarque");
-            var authors = new List<BookAuthor> {
-                ba1,
-                ba2,
-                ba3,
-                ba4,
-                ba5
-            };
+            
+            var data = new SampleHelper();
 
-            var readerInterests = new List<List<BookAuthor>> {
-                new List<BookAuthor> { ba1, ba2, ba4 },
-                new List<BookAuthor> { ba3, ba4, ba5 },
-                new List<BookAuthor> { ba1, ba3, ba4 },
-                new List<BookAuthor> { ba2, ba3, ba5 },
-                new List<BookAuthor> { ba1, ba5 },
-                new List<BookAuthor> { ba2, ba4 },
-                new List<BookAuthor> { ba4, ba5 },
-                new List<BookAuthor> { ba1, ba2, ba3, ba4},
-                new List<BookAuthor> { ba2, ba3, ba4, ba5 }
-            };
-
-            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, 0.01, authors, readerInterests);
+            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, 0.01, data.Items, data.Transactions);
             foreach (var item in result.FrequentItems.Values.OrderByDescending(v => v.Support))
             {
-                Console.WriteLine(string.Join("; ", item.Name) + " " + item.Support);
+                Console.WriteLine(string.Join("; ", item.Value.OrderBy(i => i.Name)) + " #SUP: " + item.Support);
             }
 
-            Console.WriteLine("====");
+            //Console.WriteLine("====");
 
-            foreach (var item in result.StrongRules.OrderByDescending(r => r.Confidence))
-            {
-                Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> " + item.Confidence);
-            }
+            //foreach (var item in result.StrongRules.OrderByDescending(r => r.Confidence))
+            //{
+            //    Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> " + item.Confidence);
+            //}
 
             Console.ReadLine();
         }

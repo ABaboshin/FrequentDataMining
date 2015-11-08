@@ -1,6 +1,9 @@
-﻿using System;
+﻿// MIT License.
+// (c) 2015, Andrey Baboshin
 
-namespace AprioriSample
+using System;
+
+namespace SamplesCommon
 {
     public class BookAuthor : IComparable<BookAuthor>, IEquatable<BookAuthor>
     {

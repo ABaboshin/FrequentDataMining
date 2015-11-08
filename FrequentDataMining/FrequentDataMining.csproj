@@ -42,12 +42,14 @@
   <ItemGroup>
     <Compile Include="Apriori\Apriori.cs" />
     <Compile Include="Apriori\FrequentItemsCollection.cs" />
-    <Compile Include="Apriori\Item.cs" />
-    <Compile Include="Apriori\ListExtensions.cs" />
+    <Compile Include="Common\Itemset.cs" />
+    <Compile Include="Common\ListExtensions.cs" />
     <Compile Include="Apriori\Output.cs" />
     <Compile Include="Apriori\Rule.cs" />
-    <Compile Include="Apriori\Sorter.cs" />
-    <Compile Include="Apriori\Transaction.cs" />
+    <Compile Include="Common\Sorter.cs" />
+    <Compile Include="FPGrowth\FPGrowth.cs" />
+    <Compile Include="FPGrowth\FPNode.cs" />
+    <Compile Include="FPGrowth\FPTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

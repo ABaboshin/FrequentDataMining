@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FrequentDataMining.Common;
 
 namespace FrequentDataMining.Apriori
 {
@@ -12,12 +13,12 @@ namespace FrequentDataMining.Apriori
     {
         public FrequentItemsCollection()
         {
-            Values = new List<Item<T>>();
+            Values = new List<Itemset<T>>();
         }
 
-        public List<Item<T>> Values { get; set; }
+        public List<Itemset<T>> Values { get; set; }
 
-        public void ConcatItems(List<Item<T>> items) {
+        public void ConcatItems(List<Itemset<T>> items) {
             Values = Values.Concat(items).ToList();
         }
 
@@ -25,16 +26,12 @@ namespace FrequentDataMining.Apriori
             return Values.Count();
         }
 
-        public Item<T> this[List<T> name] {
+        public Itemset<T> this[List<T> name] {
             get {
-                return Values.Where(v => v.Name.Equal(name)).FirstOrDefault();
+                return Values.FirstOrDefault(v => v.Value.Equal(name));
             }
         }
 
-        public Item<T> this[int idx] {
-            get {
-                return Values[idx];
-            }
-        }
+        public Itemset<T> this[int idx] => Values[idx];
     }
 }

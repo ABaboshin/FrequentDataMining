@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FrequentDataMining.Apriori
+namespace FrequentDataMining.Common
 {
-    public static class ListExtensions
+    internal static class ListExtensions
     {
         public static bool Equal<T>(this List<T> a, List<T> b) where T : IEquatable<T> {
             if (a.Count() != b.Count())
@@ -41,6 +41,17 @@ namespace FrequentDataMining.Apriori
             }
 
             return n1.Count().CompareTo(n2.Count());
+        }
+
+        public static List<T> Allocate<T>(int count) where  T : class
+        {
+            var list = new List<T>();
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(null);
+            }
+
+            return list;
         }
     }
 }
