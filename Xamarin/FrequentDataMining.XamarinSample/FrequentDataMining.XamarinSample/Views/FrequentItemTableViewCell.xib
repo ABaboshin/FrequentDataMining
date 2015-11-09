@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="VGx-R4-R9Y" customClass="FrequentItemTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VGx-R4-R9Y" id="gCc-zc-qV3">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sup" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vkv-GG-ChI">
+                        <rect key="frame" x="8" y="8" width="30" height="27"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="aVI-4W-TAb"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Item" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DSa-Va-OOI">
+                        <rect key="frame" x="43" y="8" width="269" height="27"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <constraints>
+                    <constraint firstItem="vkv-GG-ChI" firstAttribute="leading" secondItem="gCc-zc-qV3" secondAttribute="leadingMargin" id="57J-yK-U5h"/>
+                    <constraint firstItem="DSa-Va-OOI" firstAttribute="bottom" secondItem="gCc-zc-qV3" secondAttribute="bottomMargin" id="587-zJ-57i"/>
+                    <constraint firstItem="vkv-GG-ChI" firstAttribute="bottom" secondItem="gCc-zc-qV3" secondAttribute="bottomMargin" id="9cX-VA-8jC"/>
+                    <constraint firstItem="vkv-GG-ChI" firstAttribute="top" secondItem="gCc-zc-qV3" secondAttribute="topMargin" id="A7d-dD-T0t"/>
+                    <constraint firstItem="DSa-Va-OOI" firstAttribute="top" secondItem="gCc-zc-qV3" secondAttribute="topMargin" id="CtW-LQ-gWf"/>
+                    <constraint firstItem="DSa-Va-OOI" firstAttribute="leading" secondItem="vkv-GG-ChI" secondAttribute="trailing" constant="5" id="gIa-rx-xeS"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="DSa-Va-OOI" secondAttribute="trailing" id="xgb-aq-84W"/>
+                </constraints>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="Item" destination="DSa-Va-OOI" id="Jtc-fR-FF5"/>
+                <outlet property="Support" destination="vkv-GG-ChI" id="rgV-Gg-bIf"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>
