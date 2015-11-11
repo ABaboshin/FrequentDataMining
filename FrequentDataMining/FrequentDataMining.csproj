@@ -45,7 +45,7 @@
     <Compile Include="Common\Itemset.cs" />
     <Compile Include="Common\ListExtensions.cs" />
     <Compile Include="AgrawalFaster\Rule.cs" />
-    <Compile Include="Common\Sorter.cs" />
+    <Compile Include="Common\TypeRegister.cs" />
     <Compile Include="FPGrowth\FPGrowth.cs" />
     <Compile Include="FPGrowth\FPNode.cs" />
     <Compile Include="FPGrowth\FPTree.cs" />

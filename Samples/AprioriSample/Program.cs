@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using FrequentDataMining.AgrawalFaster;
 using FrequentDataMining.Apriori;
+using FrequentDataMining.Common;
 using SamplesCommon;
 
 namespace AprioriSample
@@ -26,10 +27,14 @@ namespace AprioriSample
             2. What we can advise the user, basing on his shopping cart. It is ordered by probability (frequent).
 
             */
+
+            TypeRegister.Register<BookAuthor>(
+                (a, b) => a.Name.CompareTo(b.Name),
+                list => list.OrderBy(l => l.Name));
             
             var data = new SampleHelper();
 
-            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, /*0.01, 0.01, data.Items,*/ data.Transactions);
+            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, data.Transactions);
             foreach (var item in result.OrderByDescending(v => v.Support))
             {
                 Console.WriteLine(string.Join("; ", item.Value.OrderBy(i => i.Name)) + " #SUP: " + item.Support);

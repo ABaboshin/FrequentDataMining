@@ -12,11 +12,15 @@ namespace FrequentDataMining.AgrawalFaster
     /// Agrawal fast mining association rules
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AgrawalFaster<T> where T : class, IComparable<T>, IEquatable<T>
+    public class AgrawalFaster<T>
     {
         public List<Rule<T>> Run(double minConfidence, double minLift, List<Itemset<T>> allFrequentItems, int transactionsCount)
         {
-            var rules = GenerateRules(allFrequentItems);
+            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
+            {
+                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+            }
+
             return GetStrongRules(minConfidence, minLift, GenerateRules(allFrequentItems), allFrequentItems, transactionsCount);
         }
 
@@ -39,7 +43,6 @@ namespace FrequentDataMining.AgrawalFaster
 
                         if (rulesList.All(r => !r.Equals(rule)))
                         {
-                            //Console.WriteLine(rule);
                             rulesList.Add(rule);
                         }
                     }
@@ -99,7 +102,9 @@ namespace FrequentDataMining.AgrawalFaster
 
             foreach (var rule in rules)
             {
-                var xy = new Sorter<T>().Sort(rule.Combination.Concat(rule.Remaining).ToList());
+                var sorter = TypeRegister.GetSorter<T>();
+                var xy = sorter(rule.Combination.Concat(rule.Remaining)).ToList();
+                
                 AddStrongRule(rule, xy, strongRules, minConfidence, minLift, allFrequentItems, size);
             }
 

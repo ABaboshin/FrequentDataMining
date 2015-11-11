@@ -9,19 +9,22 @@ namespace FrequentDataMining.Common
 {
     internal static class ListExtensions
     {
-        public static bool Equal<T>(this List<T> a, List<T> b) where T : IEquatable<T>, IComparable<T>
+        public static bool Equal<T>(this List<T> a, List<T> b)
         {
             if (a.Count() != b.Count())
             {
                 return false;
             }
 
-            var n1 = new Sorter<T>().Sort(a).ToList();
-            var n2 = new Sorter<T>().Sort(b).ToList();
+            var sorter = TypeRegister.GetSorter<T>();
 
+            var n1 = sorter(a).ToList();
+            var n2 = sorter(b).ToList();
+
+            var compareTo = TypeRegister.GetComparer<T>();
             for (var i = 0; i < n1.Count(); i++)
             {
-                if (!n1[i].Equals(n2[i]))
+                if (compareTo(n1[i], n2[i]) != 0)
                 {
                     return false;
                 }
@@ -30,14 +33,16 @@ namespace FrequentDataMining.Common
             return true;
         }
 
-        public static int Compare<T>(this List<T> a, List<T> b) where T : IEquatable<T>, IComparable<T>
+        public static int Compare<T>(this List<T> a, List<T> b)
         {
-            var n1 = new Sorter<T>().Sort(a).ToList();
-            var n2 = new Sorter<T>().Sort(b).ToList();
+            var sorter = TypeRegister.GetSorter<T>();
+            var n1 = sorter(a).ToList();
+            var n2 = sorter(b).ToList();
 
-            for (int i = 0; i < Math.Min(n1.Count(), n2.Count()); i++)
+            var compareTo = TypeRegister.GetComparer<T>();
+            for (var i = 0; i < Math.Min(n1.Count(), n2.Count()); i++)
             {
-                var cmp = n1[i].CompareTo(n2[i]);
+                var cmp = compareTo(n1[i], n2[i]);
                 if (cmp != 0)
                 {
                     return cmp;
@@ -47,15 +52,10 @@ namespace FrequentDataMining.Common
             return n1.Count().CompareTo(n2.Count());
         }
 
-        public static List<T> Allocate<T>(int count) where  T : class
+        public static List<T> Allocate<T>(int count)
         {
-            var list = new List<T>();
-            for (var i = 0; i < count; i++)
-            {
-                list.Add(null);
-            }
-
-            return list;
+            var ar = new T[count];
+            return ar.ToList();
         }
     }
 }

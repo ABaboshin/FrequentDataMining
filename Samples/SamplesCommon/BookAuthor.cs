@@ -5,7 +5,7 @@ using System;
 
 namespace SamplesCommon
 {
-    public class BookAuthor : IComparable<BookAuthor>, IEquatable<BookAuthor>
+    public class BookAuthor //: IComparable<BookAuthor>, IEquatable<BookAuthor>
     {
         public string Name { get; set; }
 
@@ -14,15 +14,15 @@ namespace SamplesCommon
             Name = name;
         }
 
-        public int CompareTo(BookAuthor other)
-        {
-            return Name.CompareTo(other.Name);
-        }
+        //public int CompareTo(BookAuthor other)
+        //{
+        //    return Name.CompareTo(other.Name);
+        //}
 
-        public bool Equals(BookAuthor other)
-        {
-            return Name.Equals(other.Name);
-        }
+        //public bool Equals(BookAuthor other)
+        //{
+        //    return Name.Equals(other.Name);
+        //}
 
         public override string ToString()
         {

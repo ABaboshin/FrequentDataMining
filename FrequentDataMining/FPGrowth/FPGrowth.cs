@@ -8,10 +8,15 @@ using FrequentDataMining.Common;
 
 namespace FrequentDataMining.FPGrowth
 {
-    public class FPGrowth<T> where T : class, IComparable<T>, IEquatable<T>
+    public class FPGrowth<T>
     {
         public List<Itemset<T>> ProcessTransactions(double minSupport, List<List<T>> transactions)
         {
+            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
+            {
+                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+            }
+
             Result = new List<Itemset<T>>();
 
             var mapSupport = ScanDetermineFrequencyOfSingleItems(transactions);
@@ -177,7 +182,6 @@ namespace FrequentDataMining.FPGrowth
 
         private void SaveItemset(List<T> prefix, int itemsetLength, int support)
         {
-            //Console.WriteLine(string.Join(";", prefix.Take(itemsetLength)) + " SUP# " + support);
             Result.Add(new Itemset<T>
             {
                 Support = support,

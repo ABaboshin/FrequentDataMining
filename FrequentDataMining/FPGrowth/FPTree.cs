@@ -1,13 +1,12 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FrequentDataMining.FPGrowth
 {
-    internal class FPTree<T> where T : IComparable<T>, IEquatable<T>
+    internal class FPTree<T>
     {
         /// <summary>
         /// List of items in the header table
@@ -38,8 +37,6 @@ namespace FrequentDataMining.FPGrowth
         /// <param name="transaction"></param>
         public void AddTransaction(List<T> transaction)
         {
-            //Console.WriteLine("add " + string.Join(";", transaction));
-
             var currentNode = Root;
             foreach (var item in transaction)
             {
@@ -55,13 +52,10 @@ namespace FrequentDataMining.FPGrowth
 
                     currentNode = newNode;
 
-                    //Console.WriteLine(" create node " + newNode);
-
                     FixNodeLinks(item, newNode);
                 }
                 else
                 {
-                    //Console.WriteLine(" update node " + child);
                     child.Counter++;
                     currentNode = child;
                 }

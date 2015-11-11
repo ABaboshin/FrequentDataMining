@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using FrequentDataMining.AgrawalFaster;
+using FrequentDataMining.Common;
 using FrequentDataMining.FPGrowth;
 using SamplesCommon;
 
@@ -26,6 +27,10 @@ namespace FPGrowthSample
             2. What we can advise the user, basing on his shopping cart. It is ordered by probability (frequent).
 
             */
+
+            TypeRegister.Register<BookAuthor>(
+                (a, b) => a.Name.CompareTo(b.Name),
+                list => list.OrderBy(l => l.Name));
 
             var data = new SampleHelper();
 

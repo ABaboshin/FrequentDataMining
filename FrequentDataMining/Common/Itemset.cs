@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FrequentDataMining.Common
 {
-    public class Itemset<T> : IComparable<Itemset<T>> where T : IComparable<T>, IEquatable<T>
+    public class Itemset<T> : IComparable<Itemset<T>>
     {
         public List<T> Value { get; set; }
         public int Support { get; set; }

@@ -8,7 +8,7 @@ using FrequentDataMining.Common;
 
 namespace FrequentDataMining.AgrawalFaster
 {
-    public class Rule<T> : IComparable<Rule<T>> where T : IComparable<T>, IEquatable<T>
+    public class Rule<T> : IComparable<Rule<T>>
     {
         public List<T> Combination { get; private set; }
 
@@ -33,8 +33,8 @@ namespace FrequentDataMining.AgrawalFaster
 
         public override int GetHashCode()
         {
-            var sorted = new Sorter<T>().Sort(Combination.Concat(Remaining).ToList());
-            return sorted.GetHashCode();
+            var sorter = TypeRegister.GetSorter<T>();
+            return sorter(Combination.Concat(Remaining)).GetHashCode();
         }
 
         public override bool Equals(object obj)

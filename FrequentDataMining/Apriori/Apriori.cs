@@ -8,10 +8,15 @@ using FrequentDataMining.Common;
 
 namespace FrequentDataMining.Apriori
 {
-    public class Apriori<T> where T : IComparable<T>, IEquatable<T>
+    public class Apriori<T>
     {
-        public List<Itemset<T>> ProcessTransaction(double minSupport, /*List<T> items,*/ List<List<T>> transactions)
+        public List<Itemset<T>> ProcessTransaction(double minSupport, List<List<T>> transactions)
         {
+            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
+            {
+                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+            }
+
             var items = transactions.SelectMany(t => t).Distinct();
             var frequentItems = GetL1FrequentItems(minSupport, items, transactions);
             var allFrequentItems = new List<Itemset<T>>();
@@ -52,11 +57,12 @@ namespace FrequentDataMining.Apriori
 
             for (int i = 0; i < frequentItems.Count - 1; i++)
             {
-                var firstItem = new Sorter<T>().Sort(frequentItems[i].Value);
+                var sorter = TypeRegister.GetSorter<T>();
+                var firstItem = sorter(frequentItems[i].Value).ToList();
 
                 for (int j = i + 1; j < frequentItems.Count; j++)
                 {
-                    var secondItem = new Sorter<T>().Sort(frequentItems[j].Value);
+                    var secondItem = sorter(frequentItems[j].Value).ToList();
                     var generatedCandidate = GenerateCandidate(firstItem, secondItem);
 
                     if (generatedCandidate.Any())

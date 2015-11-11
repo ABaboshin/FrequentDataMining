@@ -1,13 +1,12 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FrequentDataMining.FPGrowth
 {
-    internal class FPNode<T> where T : IComparable<T>, IEquatable<T>
+    internal class FPNode<T>
     {
         public T Item { get; set; }
 
