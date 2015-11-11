@@ -1,4 +1,4 @@
-// MIT License.
+﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
 using System;
@@ -25,7 +25,11 @@ namespace FrequentDataMining.XamarinSample
 
 		public override void ViewDidLoad ()
 		{
-			var fpGrowth = new FPGrowth<BookAuthor>();
+            FrequentDataMining.CommonюTypeRegister.Register<BookAuthor>(
+                (a, b) => a.Name.CompareTo(b.Name),
+                list => list.OrderBy(l => l.Name));
+
+            var fpGrowth = new FPGrowth<BookAuthor>();
 			var result = fpGrowth.ProcessTransactions((double)1/9, Transactions);
 
 			FrequentItemsTable.RegisterClassForCellReuse (typeof(FrequentItemTableViewCell), FrequentTableViewDelegate.CellIdentifier);
