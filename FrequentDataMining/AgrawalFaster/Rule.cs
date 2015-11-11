@@ -34,7 +34,7 @@ namespace FrequentDataMining.AgrawalFaster
         public override int GetHashCode()
         {
             var sorter = TypeRegister.GetSorter<T>();
-            return sorter(Combination.Concat(Remaining)).GetHashCode();
+            return sorter(Combination.Concat(Remaining).ToList()).GetHashCode();
         }
 
         public override bool Equals(object obj)

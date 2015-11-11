@@ -28,9 +28,7 @@ namespace AprioriSample
 
             */
 
-            TypeRegister.Register<BookAuthor>(
-                (a, b) => a.Name.CompareTo(b.Name),
-                list => list.OrderBy(l => l.Name));
+            TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name));
             
             var data = new SampleHelper();
 

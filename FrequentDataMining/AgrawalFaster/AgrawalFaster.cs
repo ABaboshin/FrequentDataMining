@@ -103,7 +103,7 @@ namespace FrequentDataMining.AgrawalFaster
             foreach (var rule in rules)
             {
                 var sorter = TypeRegister.GetSorter<T>();
-                var xy = sorter(rule.Combination.Concat(rule.Remaining)).ToList();
+                var xy = sorter(rule.Combination.Concat(rule.Remaining).ToList()).ToList();
                 
                 AddStrongRule(rule, xy, strongRules, minConfidence, minLift, allFrequentItems, size);
             }

@@ -25,9 +25,7 @@ namespace FrequentDataMining.XamarinSample
 
 		public override void ViewDidLoad ()
 		{
-            FrequentDataMining.CommonюTypeRegister.Register<BookAuthor>(
-                (a, b) => a.Name.CompareTo(b.Name),
-                list => list.OrderBy(l => l.Name));
+            FrequentDataMining.Common.TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name)); ;
 
             var fpGrowth = new FPGrowth<BookAuthor>();
 			var result = fpGrowth.ProcessTransactions((double)1/9, Transactions);
