@@ -107,7 +107,9 @@ namespace FrequentDataMining.FPGrowth
                     SaveItemset(prefix, prefixLength + 1, betaSupport);
 
                     var prefixPaths = new List<List<FPNode<T>>>();
-                    var path = tree.MapItemNodes[item];
+                    FPNode<T> path = null;
+
+                    tree.MapItemNodes.TryGetValue(item, out path);
 
                     var mapSupportBeta = new Dictionary<T, int>();
                     while (path != null)
