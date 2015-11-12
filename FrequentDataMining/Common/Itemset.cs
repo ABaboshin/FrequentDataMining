@@ -9,7 +9,7 @@ namespace FrequentDataMining.Common
 {
     public class Itemset<T> : IComparable<Itemset<T>>
     {
-        public List<T> Value { get; set; }
+        public IEnumerable<T> Value { get; set; }
         public int Support { get; set; }
 
         public int CompareTo(Itemset<T> other)

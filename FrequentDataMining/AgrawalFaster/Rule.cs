@@ -10,9 +10,9 @@ namespace FrequentDataMining.AgrawalFaster
 {
     public class Rule<T> : IComparable<Rule<T>>
     {
-        public List<T> Combination { get; private set; }
+        public IEnumerable<T> Combination { get; private set; }
 
-        public List<T> Remaining { get; private set; }
+        public IEnumerable<T> Remaining { get; private set; }
 
         public double Confidence { get; private set; }
 
@@ -20,8 +20,8 @@ namespace FrequentDataMining.AgrawalFaster
 
         public Rule(IEnumerable<T> combination, IEnumerable<T> remaining, double confidence, double lift)
         {
-            Combination = combination.ToList();
-            Remaining = remaining.ToList();
+            Combination = combination;
+            Remaining = remaining;
             Confidence = confidence;
             Lift = lift;
         }

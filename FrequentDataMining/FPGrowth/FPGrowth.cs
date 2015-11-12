@@ -180,7 +180,7 @@ namespace FrequentDataMining.FPGrowth
             }
         }
 
-        private void SaveItemset(List<T> prefix, int itemsetLength, int support)
+        private void SaveItemset(IEnumerable<T> prefix, int itemsetLength, int support)
         {
             Result.Add(new Itemset<T>
             {

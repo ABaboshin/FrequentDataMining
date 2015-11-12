@@ -52,7 +52,7 @@ namespace FrequentDataMining.AgrawalFaster
             return rulesList;
         }
 
-        List<List<T>> GenerateSubsets(List<T> item)
+        List<List<T>> GenerateSubsets(IEnumerable<T> item)
         {
             var allSubsets = new List<List<T>>();
             int subsetLength = item.Count() / 2;
@@ -60,14 +60,14 @@ namespace FrequentDataMining.AgrawalFaster
             for (int i = 1; i <= subsetLength; i++)
             {
                 var subsets = new List<List<T>>();
-                GenerateSubsetsRecursive(item, i, new T[item.Count], subsets);
+                GenerateSubsetsRecursive(item, i, new T[item.Count()], subsets);
                 allSubsets = allSubsets.Concat(subsets).ToList();
             }
 
             return allSubsets;
         }
 
-        private void GenerateSubsetsRecursive(List<T> item, int subsetLength, T[] temp, IList<List<T>> subsets, int q = 0, int r = 0)
+        private void GenerateSubsetsRecursive(IEnumerable<T> item, int subsetLength, T[] temp, IList<List<T>> subsets, int q = 0, int r = 0)
         {
             if (q == subsetLength)
             {
@@ -78,7 +78,7 @@ namespace FrequentDataMining.AgrawalFaster
             {
                 for (int i = r; i < item.Count(); i++)
                 {
-                    temp[q] = item[i];
+                    temp[q] = item.Skip(i).First();
                     GenerateSubsetsRecursive(item, subsetLength, temp, subsets, q + 1, i + 1);
                 }
             }
@@ -96,7 +96,7 @@ namespace FrequentDataMining.AgrawalFaster
             foreach (var rule in rules)
             {
                 var sorter = TypeRegister.GetSorter<T>();
-                var xy = sorter(rule.Combination.Concat(rule.Remaining).ToList()).ToList();
+                var xy = sorter(rule.Combination.Concat(rule.Remaining)).ToList();
                 
                 AddStrongRule(rule, xy, strongRules, minConfidence, minLift, allFrequentItems, size);
             }
