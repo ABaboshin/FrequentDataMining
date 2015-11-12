@@ -14,7 +14,7 @@ namespace FrequentDataMining.AgrawalFaster
     /// <typeparam name="T"></typeparam>
     public class AgrawalFaster<T>
     {
-        public List<Rule<T>> Run(double minConfidence, double minLift, List<Itemset<T>> allFrequentItems, int transactionsCount)
+        public List<Rule<T>> Run(double minConfidence, double minLift, IEnumerable<Itemset<T>> allFrequentItems, int transactionsCount)
         {
             if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
             {
@@ -24,13 +24,13 @@ namespace FrequentDataMining.AgrawalFaster
             return GetStrongRules(minConfidence, minLift, GenerateRules(allFrequentItems), allFrequentItems, transactionsCount);
         }
 
-        HashSet<Rule<T>> GenerateRules(List<Itemset<T>> allFrequentItems)
+        HashSet<Rule<T>> GenerateRules(IEnumerable<Itemset<T>> allFrequentItems)
         {
             var rulesList = new HashSet<Rule<T>>();
 
             for (var idx = 0; idx < allFrequentItems.Count(); idx++)
             {
-                var item = allFrequentItems[idx];
+                var item = allFrequentItems.Skip(idx).First();
 
                 if (item.Value.Count() > 1)
                 {
@@ -84,19 +84,12 @@ namespace FrequentDataMining.AgrawalFaster
             }
         }
 
-        List<T> GetRemaining(List<T> child, List<T> parent)
+        IEnumerable<T> GetRemaining(IEnumerable<T> child, IEnumerable<T> parent)
         {
-            var copy = parent.Select(p => p).ToList();
-            for (int i = 0; i < child.Count(); i++)
-            {
-                int index = copy.IndexOf(child[i]);
-                copy.RemoveAt(index);
-            }
-
-            return copy;
+            return parent.Where(p => !child.Contains(p)).ToList();
         }
 
-        List<Rule<T>> GetStrongRules(double minConfidence, double minLift, HashSet<Rule<T>> rules, List<Itemset<T>> allFrequentItems, int size)
+        List<Rule<T>> GetStrongRules(double minConfidence, double minLift, HashSet<Rule<T>> rules, IEnumerable<Itemset<T>> allFrequentItems, int size)
         {
             var strongRules = new List<Rule<T>>();
 
@@ -112,7 +105,7 @@ namespace FrequentDataMining.AgrawalFaster
             return strongRules;
         }
 
-        void AddStrongRule(Rule<T> rule, List<T> XY, List<Rule<T>> strongRules, double minConfidence, double minLift, List<Itemset<T>> allFrequentItems, int size)
+        void AddStrongRule(Rule<T> rule, List<T> XY, List<Rule<T>> strongRules, double minConfidence, double minLift, IEnumerable<Itemset<T>> allFrequentItems, int size)
         {
             var confidence = GetConfidence(rule.Combination, XY, allFrequentItems);
             var lift = GetLift(rule.Combination, rule.Remaining, XY, allFrequentItems, size);
@@ -133,19 +126,19 @@ namespace FrequentDataMining.AgrawalFaster
             }
         }
 
-        private Itemset<T> GetItemset(List<Itemset<T>> allFrequentItems, List<T> item)
+        private Itemset<T> GetItemset(IEnumerable<Itemset<T>> allFrequentItems, IEnumerable<T> item)
         {
             return allFrequentItems.FirstOrDefault(i => i.Value.Equal(item));
         }
 
-        double GetConfidence(List<T> X, List<T> XY, List<Itemset<T>> allFrequentItems)
+        double GetConfidence(IEnumerable<T> X, IEnumerable<T> XY, IEnumerable<Itemset<T>> allFrequentItems)
         {
             var x1 = GetItemset(allFrequentItems, XY);
             var x2 = GetItemset(allFrequentItems, X);
             return x1.Support / (double)x2.Support;
         }
 
-        private double GetLift(List<T> X, List<T> Y, List<T> XY, List<Itemset<T>> allFrequentItems, int size)
+        private double GetLift(IEnumerable<T> X, IEnumerable<T> Y, IEnumerable<T> XY, IEnumerable<Itemset<T>> allFrequentItems, int size)
         {
             var term1 = ((double)GetItemset(allFrequentItems, XY).Support) / size;
             var term2 = (double)GetItemset(allFrequentItems, Y).Support / size;

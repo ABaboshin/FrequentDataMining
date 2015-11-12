@@ -35,7 +35,7 @@ namespace FrequentDataMining.FPGrowth
         /// add a transaction to the fp-tree (for the initial construction of the FP-Tree).
         /// </summary>
         /// <param name="transaction"></param>
-        public void AddTransaction(List<T> transaction)
+        public void AddTransaction(IEnumerable<T> transaction)
         {
             var currentNode = Root;
             foreach (var item in transaction)
@@ -43,11 +43,12 @@ namespace FrequentDataMining.FPGrowth
                 var child = currentNode.GetChild(item);
                 if (child == null)
                 {
-                    
-                    var newNode = new FPNode<T>();
-                    newNode.Item = item;
-                    newNode.Parent = currentNode;
-                    newNode.Counter = 1;
+                    var newNode = new FPNode<T>
+                    {
+                        Item = item,
+                        Parent = currentNode,
+                        Counter = 1
+                    };
                     currentNode.Childs.Add(newNode);
 
                     currentNode = newNode;

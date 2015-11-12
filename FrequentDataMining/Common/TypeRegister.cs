@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FrequentDataMining.Common
 {
@@ -36,13 +37,20 @@ namespace FrequentDataMining.Common
             return null;
         }
 
-        internal static Func<List<T>, List<T>> GetSorter<T>()
+        internal static Func<IEnumerable<T>, IEnumerable<T>> GetSorter<T>()
         {
             return list =>
             {
-                list.Sort((a, b) => GetComparer<T>()(a, b));
-                return list;
+                return list.OrderBy(l => l, new Comparer<T>());
             };
+        }
+    }
+
+    class Comparer<T> : IComparer<T>
+    {
+        public int Compare(T x, T y)
+        {
+            return TypeRegister.GetComparer<T>()(x, y);
         }
     }
 }

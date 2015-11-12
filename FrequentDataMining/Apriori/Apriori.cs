@@ -10,7 +10,7 @@ namespace FrequentDataMining.Apriori
 {
     public class Apriori<T>
     {
-        public List<Itemset<T>> ProcessTransaction(double minSupport, List<List<T>> transactions)
+        public List<Itemset<T>> ProcessTransaction(double minSupport, IEnumerable<IEnumerable<T>> transactions)
         {
             if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
             {
@@ -51,7 +51,7 @@ namespace FrequentDataMining.Apriori
             return frequentItems;
         }
 
-        private Dictionary<List<T>, double> GenerateCandidates(IList<Itemset<T>> frequentItems, IEnumerable<List<T>> transactions)
+        private Dictionary<List<T>, double> GenerateCandidates(IList<Itemset<T>> frequentItems, IEnumerable<IEnumerable<T>> transactions)
         {
             var candidates = new Dictionary<List<T>, double>();
 
@@ -98,7 +98,7 @@ namespace FrequentDataMining.Apriori
             }
         }
 
-        List<Itemset<T>> GetL1FrequentItems(double minSupport, IEnumerable<T> items, IEnumerable<List<T>> transactions)
+        List<Itemset<T>> GetL1FrequentItems(double minSupport, IEnumerable<T> items, IEnumerable<IEnumerable<T>> transactions)
         {
             var frequentItemsL1 = new List<Itemset<T>>();
             var transactionsCount = transactions.Count();
@@ -116,7 +116,7 @@ namespace FrequentDataMining.Apriori
             return frequentItemsL1;
         }
 
-        double GetSupport(List<T> generatedCandidate, IEnumerable<List<T>> transactionsList)
+        double GetSupport(List<T> generatedCandidate, IEnumerable<IEnumerable<T>> transactionsList)
         {
             double support = 0;
 
@@ -131,17 +131,9 @@ namespace FrequentDataMining.Apriori
             return support;
         }
 
-        bool CheckIsSubset(List<T> child, List<T> parent)
+        bool CheckIsSubset(IEnumerable<T> child, IEnumerable<T> parent)
         {
-            foreach (var c in child)
-            {
-                if (!parent.Contains(c))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return child.All(c => parent.Contains(c));
         }
     }
 }

@@ -18,10 +18,10 @@ namespace FrequentDataMining.AgrawalFaster
 
         public double Lift { get; private set; }
 
-        public Rule(List<T> combination, List<T> remaining, double confidence, double lift)
+        public Rule(IEnumerable<T> combination, IEnumerable<T> remaining, double confidence, double lift)
         {
-            Combination = combination;
-            Remaining = remaining;
+            Combination = combination.ToList();
+            Remaining = remaining.ToList();
             Confidence = confidence;
             Lift = lift;
         }
@@ -34,7 +34,7 @@ namespace FrequentDataMining.AgrawalFaster
         public override int GetHashCode()
         {
             var sorter = TypeRegister.GetSorter<T>();
-            return sorter(Combination.Concat(Remaining).ToList()).GetHashCode();
+            return sorter(Combination.Concat(Remaining)).GetHashCode();
         }
 
         public override bool Equals(object obj)

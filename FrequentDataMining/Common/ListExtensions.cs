@@ -9,47 +9,33 @@ namespace FrequentDataMining.Common
 {
     internal static class ListExtensions
     {
-        public static bool Equal<T>(this List<T> a, List<T> b)
+        public static bool Equal<T>(this IEnumerable<T> a, IEnumerable<T> b)
         {
             if (a.Count() != b.Count())
             {
                 return false;
             }
 
-            var sorter = TypeRegister.GetSorter<T>();
-
-            var n1 = sorter(a).ToList();
-            var n2 = sorter(b).ToList();
-
-            var compareTo = TypeRegister.GetComparer<T>();
-            for (var i = 0; i < n1.Count(); i++)
-            {
-                if (compareTo(n1[i], n2[i]) != 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Compare(a, b) == 0;
         }
 
-        public static int Compare<T>(this List<T> a, List<T> b)
+        public static int Compare<T>(this IEnumerable<T> a, IEnumerable<T> b)
         {
             var sorter = TypeRegister.GetSorter<T>();
-            var n1 = sorter(a).ToList();
-            var n2 = sorter(b).ToList();
+            var sortedA = sorter(a);
+            var sortedB = sorter(b);
 
             var compareTo = TypeRegister.GetComparer<T>();
-            for (var i = 0; i < Math.Min(n1.Count(), n2.Count()); i++)
+            for (var i = 0; i < Math.Min(sortedA.Count(), sortedB.Count()); i++)
             {
-                var cmp = compareTo(n1[i], n2[i]);
+                var cmp = compareTo(sortedA.Skip(i).First(), sortedB.Skip(i).First());
                 if (cmp != 0)
                 {
                     return cmp;
                 }
             }
 
-            return n1.Count().CompareTo(n2.Count());
+            return sortedA.Count().CompareTo(sortedB.Count());
         }
 
         public static List<T> Allocate<T>(int count)

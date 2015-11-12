@@ -10,7 +10,7 @@ namespace FrequentDataMining.FPGrowth
 {
     public class FPGrowth<T>
     {
-        public List<Itemset<T>> ProcessTransactions(double minSupport, List<List<T>> transactions)
+        public List<Itemset<T>> ProcessTransactions(double minSupport, IEnumerable<IEnumerable<T>> transactions)
         {
             if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
             {
@@ -20,7 +20,8 @@ namespace FrequentDataMining.FPGrowth
             Result = new List<Itemset<T>>();
 
             var mapSupport = ScanDetermineFrequencyOfSingleItems(transactions);
-            minSupportRelative = (int) (minSupport*transactions.Count());
+            var transactionsCount = transactions.Count();
+            minSupportRelative = (int) (minSupport*transactionsCount);
             var tree = new FPTree<T>();
 
             foreach (var transaction in transactions)
@@ -29,7 +30,6 @@ namespace FrequentDataMining.FPGrowth
                     transaction
                     .Where(i=>mapSupport[i] >= minSupport)
                     .OrderByDescending(i=>mapSupport[i])
-                    .ToList()
                 );
             }
 
@@ -37,7 +37,7 @@ namespace FrequentDataMining.FPGrowth
 
             nodeBuffer = ListExtensions.Allocate<FPNode<T>>(BufferSize);
 
-            Run(tree, ListExtensions.Allocate<T>(BufferSize), 0, transactions.Count(), mapSupport);
+            Run(tree, ListExtensions.Allocate<T>(BufferSize), 0, transactionsCount, mapSupport);
 
             return Result;
         }
@@ -194,7 +194,7 @@ namespace FrequentDataMining.FPGrowth
         /// </summary>
         /// <param name="transactions"></param>
         /// <returns></returns>
-        private Dictionary<T, int> ScanDetermineFrequencyOfSingleItems(List<List<T>> transactions)
+        private Dictionary<T, int> ScanDetermineFrequencyOfSingleItems(IEnumerable<IEnumerable<T>> transactions)
         {
             var result = new Dictionary<T, int>();
 
