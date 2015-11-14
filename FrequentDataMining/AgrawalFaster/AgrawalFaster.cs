@@ -1,10 +1,10 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
+using FrequentDataMining.Interfaces;
 
 namespace FrequentDataMining.AgrawalFaster
 {
@@ -14,19 +14,56 @@ namespace FrequentDataMining.AgrawalFaster
     /// <typeparam name="T"></typeparam>
     public class AgrawalFaster<T>
     {
-        public List<Rule<T>> Run(double minConfidence, double minLift, IEnumerable<Itemset<T>> allFrequentItems, int transactionsCount)
+        public double MinConfidence { get; set; }
+
+        public double MinLift { get; set; }
+
+        public IItemsetReader<T> ItemsetReader { get; set; }
+
+        public IRuleWriter<T> RuleWriter { get; set; }
+
+        public int TransactionsCount { get; set; }
+
+        public void Run()
         {
-            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
+            TypeRegister.Register<int>((a, b) => { return a.CompareTo(b); });
+            TypeRegister.EnsureType<T>();
+
+            allFrequentItems = new List<Itemset<int>>();
+            items = new List<T>();
+            foreach (var itemset in ItemsetReader.GetItemsets())
             {
-                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+                allFrequentItems.Add(new Itemset<int>
+                {
+                    Support = itemset.Support,
+                    Value = itemset.Value.Select(GetItemIdx).ToList()
+                });
             }
 
-            return GetStrongRules(minConfidence, minLift, GenerateRules(allFrequentItems), allFrequentItems, transactionsCount);
+            GetStrongRules(GenerateRules());
         }
 
-        HashSet<Rule<T>> GenerateRules(IEnumerable<Itemset<T>> allFrequentItems)
+        List<Itemset<int>> allFrequentItems;
+        List<T> items;
+
+        int GetItemIdx(T item)
         {
-            var rulesList = new HashSet<Rule<T>>();
+            for (var i = 0; i < items.Count(); i++)
+            {
+                if (TypeRegister.GetComparer<T>()(items[i], item) == 0)
+                {
+                    return i;
+                }
+            }
+
+            items.Add(item);
+
+            return items.Count() - 1;
+        }
+
+        HashSet<Rule<int>> GenerateRules()
+        {
+            var rulesList = new HashSet<Rule<int>>();
 
             for (var idx = 0; idx < allFrequentItems.Count(); idx++)
             {
@@ -39,7 +76,7 @@ namespace FrequentDataMining.AgrawalFaster
                     foreach (var subset in subsetsList)
                     {
                         var remaining = GetRemaining(subset, item.Value);
-                        var rule = new Rule<T>(subset, remaining, 0, 0);
+                        var rule = new Rule<int>(subset, remaining, 0, 0);
 
                         if (rulesList.All(r => !r.Equals(rule)))
                         {
@@ -52,22 +89,22 @@ namespace FrequentDataMining.AgrawalFaster
             return rulesList;
         }
 
-        List<List<T>> GenerateSubsets(IEnumerable<T> item)
+        List<List<int>> GenerateSubsets(IEnumerable<int> item)
         {
-            var allSubsets = new List<List<T>>();
-            int subsetLength = item.Count() / 2;
+            var allSubsets = new List<List<int>>();
+            var subsetLength = item.Count() / 2;
 
-            for (int i = 1; i <= subsetLength; i++)
+            for (var i = 1; i <= subsetLength; i++)
             {
-                var subsets = new List<List<T>>();
-                GenerateSubsetsRecursive(item, i, new T[item.Count()], subsets);
+                var subsets = new List<List<int>>();
+                GenerateSubsetsRecursive(item, i, new int[item.Count()], subsets);
                 allSubsets = allSubsets.Concat(subsets).ToList();
             }
 
             return allSubsets;
         }
 
-        private void GenerateSubsetsRecursive(IEnumerable<T> item, int subsetLength, T[] temp, IList<List<T>> subsets, int q = 0, int r = 0)
+        private void GenerateSubsetsRecursive(IEnumerable<int> item, int subsetLength, int[] temp, IList<List<int>> subsets, int q = 0, int r = 0)
         {
             if (q == subsetLength)
             {
@@ -76,7 +113,7 @@ namespace FrequentDataMining.AgrawalFaster
 
             else
             {
-                for (int i = r; i < item.Count(); i++)
+                for (var i = r; i < item.Count(); i++)
                 {
                     temp[q] = item.Skip(i).First();
                     GenerateSubsetsRecursive(item, subsetLength, temp, subsets, q + 1, i + 1);
@@ -84,65 +121,71 @@ namespace FrequentDataMining.AgrawalFaster
             }
         }
 
-        IEnumerable<T> GetRemaining(IEnumerable<T> child, IEnumerable<T> parent)
+        IEnumerable<int> GetRemaining(IEnumerable<int> child, IEnumerable<int> parent)
         {
             return parent.Where(p => !child.Contains(p)).ToList();
         }
 
-        List<Rule<T>> GetStrongRules(double minConfidence, double minLift, HashSet<Rule<T>> rules, IEnumerable<Itemset<T>> allFrequentItems, int size)
+        void GetStrongRules(HashSet<Rule<int>> rules)
         {
-            var strongRules = new List<Rule<T>>();
-
             foreach (var rule in rules)
             {
-                var sorter = TypeRegister.GetSorter<T>();
-                var xy = sorter(rule.Combination.Concat(rule.Remaining)).ToList();
+                var xy = rule.Combination.Concat(rule.Remaining).ToList();
+                xy.Sort();
                 
-                AddStrongRule(rule, xy, strongRules, minConfidence, minLift, allFrequentItems, size);
+                AddStrongRule(rule, xy);
             }
-
-            strongRules.Sort();
-            return strongRules;
         }
 
-        void AddStrongRule(Rule<T> rule, List<T> XY, List<Rule<T>> strongRules, double minConfidence, double minLift, IEnumerable<Itemset<T>> allFrequentItems, int size)
+        void AddStrongRule(Rule<int> rule, List<int> XY)
         {
-            var confidence = GetConfidence(rule.Combination, XY, allFrequentItems);
-            var lift = GetLift(rule.Combination, rule.Remaining, XY, allFrequentItems, size);
+            var confidence = GetConfidence(rule.Combination, XY);
+            var lift = GetLift(rule.Combination, rule.Remaining, XY);
 
-            if (confidence >= minConfidence && lift >= minLift)
+            if (confidence >= MinConfidence && lift >= MinLift)
             {
-                var newRule = new Rule<T>(rule.Combination, rule.Remaining, confidence, lift);
-                strongRules.Add(newRule);
+                var newRule = new Rule<int>(rule.Combination, rule.Remaining, confidence, lift);
+                SaveRule(newRule);
             }
 
-            confidence = GetConfidence(rule.Remaining, XY, allFrequentItems);
-            lift = GetLift(rule.Remaining, rule.Combination, XY, allFrequentItems, size);
+            confidence = GetConfidence(rule.Remaining, XY);
+            lift = GetLift(rule.Remaining, rule.Combination, XY);
 
-            if (confidence >= minConfidence && lift >= minLift)
+            if (confidence >= MinConfidence && lift >= MinLift)
             {
-                var newRule = new Rule<T>(rule.Remaining, rule.Combination, confidence, lift);
-                strongRules.Add(newRule);
+                var newRule = new Rule<int>(rule.Remaining, rule.Combination, confidence, lift);
+                SaveRule(newRule);
             }
         }
 
-        private Itemset<T> GetItemset(IEnumerable<Itemset<T>> allFrequentItems, IEnumerable<T> item)
+        private void SaveRule(Rule<int> rule)
+        {
+            RuleWriter.SaveRule(new Rule<T>
+            {
+                Lift = rule.Lift,
+                Confidence = rule.Confidence,
+                Combination = rule.Combination.Select(i=>items[i]).ToList(),
+                Remaining = rule.Remaining.Select(i => items[i]).ToList()
+            });
+        }
+
+        private Itemset<int> GetItemset(IEnumerable<int> item)
         {
             return allFrequentItems.FirstOrDefault(i => i.Value.Equal(item));
         }
 
-        double GetConfidence(IEnumerable<T> X, IEnumerable<T> XY, IEnumerable<Itemset<T>> allFrequentItems)
+        double GetConfidence(IEnumerable<int> X, IEnumerable<int> XY)
         {
-            var x1 = GetItemset(allFrequentItems, XY);
-            var x2 = GetItemset(allFrequentItems, X);
+            var x1 = GetItemset(XY);
+            var x2 = GetItemset(X);
             return x1.Support / (double)x2.Support;
         }
 
-        private double GetLift(IEnumerable<T> X, IEnumerable<T> Y, IEnumerable<T> XY, IEnumerable<Itemset<T>> allFrequentItems, int size)
+        double GetLift(IEnumerable<int> X, IEnumerable<int> Y, IEnumerable<int> XY)
         {
-            var term1 = ((double)GetItemset(allFrequentItems, XY).Support) / size;
-            var term2 = (double)GetItemset(allFrequentItems, Y).Support / size;
-            var term3 = ((double)GetItemset(allFrequentItems, X).Support / size);
+            var term1 = ((double)GetItemset(XY).Support) / TransactionsCount;
+            var term2 = (double)GetItemset(Y).Support / TransactionsCount;
+            var term3 = ((double)GetItemset(X).Support / TransactionsCount);
             return term1 / (term2 * term3);
         }
     }

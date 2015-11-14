@@ -6,36 +6,36 @@ using System.Linq;
 
 namespace FrequentDataMining.FPGrowth
 {
-    internal class FPTree<T>
+    internal class FPTree
     {
         /// <summary>
         /// List of items in the header table
         /// </summary>
-        public List<T> HeaderList { get; set; }
+        public List<int> HeaderList { get; set; }
 
         /// <summary>
         /// List of pairs (item, frequency) of the header table
         /// </summary>
-        public Dictionary<T, FPNode<T>> MapItemNodes { get; set; }
+        public Dictionary<int, FPNode> MapItemNodes { get; set; }
 
         /// <summary>
         /// Map that indicates the last node for each item using the node links
         /// </summary>
-        Dictionary<T, FPNode<T>> mapItemLastNode = new Dictionary<T, FPNode<T>>();
+        Dictionary<int, FPNode> mapItemLastNode = new Dictionary<int, FPNode>();
 
-        public FPNode<T> Root { get; set; }
+        public FPNode Root { get; set; }
 
         public FPTree()
         {
-            Root = new FPNode<T>();
-            MapItemNodes = new Dictionary<T, FPNode<T>>();
+            Root = new FPNode();
+            MapItemNodes = new Dictionary<int, FPNode>();
         }
 
         /// <summary>
         /// add a transaction to the fp-tree (for the initial construction of the FP-Tree).
         /// </summary>
         /// <param name="transaction"></param>
-        public void AddTransaction(IEnumerable<T> transaction)
+        public void AddTransaction(IEnumerable<int> transaction)
         {
             var currentNode = Root;
             foreach (var item in transaction)
@@ -43,7 +43,7 @@ namespace FrequentDataMining.FPGrowth
                 var child = currentNode.GetChild(item);
                 if (child == null)
                 {
-                    var newNode = new FPNode<T>
+                    var newNode = new FPNode
                     {
                         Item = item,
                         Parent = currentNode,
@@ -67,12 +67,12 @@ namespace FrequentDataMining.FPGrowth
         /// create the list of items in the header table in descending order of support
         /// </summary>
         /// <param name="mapSupport"></param>
-        public void CreateHeaderList(Dictionary<T, int> mapSupport)
+        public void CreateHeaderList(Dictionary<int, int> mapSupport)
         {
             HeaderList = mapSupport.OrderByDescending(s => s.Value).Select(s => s.Key).ToList();
         }
 
-        public void AddPrefixPath(List<FPNode<T>> prefixPath, Dictionary<T, int> mapSupportBeta, int relativeMinsupp)
+        public void AddPrefixPath(List<FPNode> prefixPath, Dictionary<int, int> mapSupportBeta, int relativeMinsupp)
         {
             var pathCount = prefixPath.First().Counter;
 
@@ -87,7 +87,7 @@ namespace FrequentDataMining.FPGrowth
                     var child = currentNode.GetChild(pathItem.Item);
                     if (child == null)
                     {
-                        var newNode = new FPNode<T>();
+                        var newNode = new FPNode();
                         newNode.Item = pathItem.Item;
                         newNode.Parent = currentNode;
                         newNode.Counter = pathCount;
@@ -110,7 +110,7 @@ namespace FrequentDataMining.FPGrowth
         /// </summary>
         /// <param name="item"></param>
         /// <param name="newNode"></param>
-        void FixNodeLinks(T item, FPNode<T> newNode)
+        void FixNodeLinks(int item, FPNode newNode)
         {
             if (mapItemLastNode.ContainsKey(item))
             {

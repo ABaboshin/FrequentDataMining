@@ -1,8 +1,6 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
-
 namespace SamplesCommon
 {
     public class BookAuthor //: IComparable<BookAuthor>, IEquatable<BookAuthor>

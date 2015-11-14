@@ -1,63 +1,52 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
 
 namespace FrequentDataMining.FPGrowth
 {
-    public class FPGrowth<T>
+    public class FPGrowth<T> : AssociationRuleLearningAlgorithm<T>
     {
-        public List<Itemset<T>> ProcessTransactions(double minSupport, IEnumerable<IEnumerable<T>> transactions)
+        public override void ProcessTransactions()
         {
-            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
-            {
-                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
-            }
+            Prepare();
 
-            Result = new List<Itemset<T>>();
-
-            var mapSupport = ScanDetermineFrequencyOfSingleItems(transactions);
+            var mapSupport = ScanDetermineFrequencyOfSingleItems();
             var transactionsCount = transactions.Count();
-            minSupportRelative = (int) (minSupport*transactionsCount);
-            var tree = new FPTree<T>();
+            minSupportRelative = (int) (MinSupport*transactionsCount);
+            var tree = new FPTree ();
 
             foreach (var transaction in transactions)
             {
                 tree.AddTransaction(
                     transaction
-                    .Where(i=>mapSupport[i] >= minSupport)
+                    .Where(i=>mapSupport[i] >= MinSupport)
                     .OrderByDescending(i=>mapSupport[i])
                 );
             }
 
             tree.CreateHeaderList(mapSupport);
 
-            nodeBuffer = ListExtensions.Allocate<FPNode<T>>(BufferSize);
+            nodeBuffer = ListExtensions.Allocate<FPNode>(BufferSize);
 
-            Run(tree, ListExtensions.Allocate<T>(BufferSize), 0, transactionsCount, mapSupport);
-
-            return Result;
+            Run(tree, ListExtensions.Allocate<int>(BufferSize), 0, transactionsCount, mapSupport);
         }
 
-        /// <summary>
-        /// Result
-        /// </summary>
-        public List<Itemset<T>> Result { get; set; }
-
+        #region fields
         /// <summary>
         /// the relative minimum support
         /// </summary>
         int minSupportRelative;
 
-        List<FPNode<T>> nodeBuffer;
+        List<FPNode> nodeBuffer;
+        #endregion
 
         public const int BufferSize = 200;
 
-        void Run(FPTree<T> tree, List<T> prefix, int prefixLength, int prefixSupport,
-            Dictionary<T, int> mapSupport)
+        void Run(FPTree tree, List<int> prefix, int prefixLength, int prefixSupport,
+            Dictionary<int, int> mapSupport)
         {
             var singlePath = true;
             var singlePathSupport = 0;
@@ -106,23 +95,23 @@ namespace FrequentDataMining.FPGrowth
                     var betaSupport = (prefixSupport < support) ? prefixSupport : support;
                     SaveItemset(prefix, prefixLength + 1, betaSupport);
 
-                    var prefixPaths = new List<List<FPNode<T>>>();
-                    FPNode<T> path = null;
+                    var prefixPaths = new List<List<FPNode>>();
+                    FPNode path = null;
 
                     tree.MapItemNodes.TryGetValue(item, out path);
 
-                    var mapSupportBeta = new Dictionary<T, int>();
+                    var mapSupportBeta = new Dictionary<int, int>();
                     while (path != null)
                     {
-                        if (path.Parent.Item != null)
+                        if (path.Parent.Item != -1)
                         {
-                            var prefixPath = new List<FPNode<T>>();
+                            var prefixPath = new List<FPNode>();
                             prefixPath.Add(path);
 
                             var pathCount = path.Counter;
 
                             var parent = path.Parent;
-                            while (parent.Item != null)
+                            while (parent.Item != -1)
                             {
                                 prefixPath.Add(parent);
 
@@ -142,7 +131,7 @@ namespace FrequentDataMining.FPGrowth
                         path = path.NodeLink;
                     }
 
-                    var treeBeta = new FPTree<T>();
+                    var treeBeta = new FPTree();
                     foreach (var prefixPath in prefixPaths)
                     {
                         treeBeta.AddPrefixPath(prefixPath, mapSupportBeta, minSupportRelative);
@@ -158,7 +147,7 @@ namespace FrequentDataMining.FPGrowth
             }
         }
 
-        private void SaveAllCombinations(int position, List<T> prefix, int prefixLength)
+        private void SaveAllCombinations(int position, List<int> prefix, int prefixLength)
         {
             var support = 0;
             for (long i = 0; i < (1 << position); i++)
@@ -182,23 +171,22 @@ namespace FrequentDataMining.FPGrowth
             }
         }
 
-        private void SaveItemset(IEnumerable<T> prefix, int itemsetLength, int support)
+        void SaveItemset(IEnumerable<int> prefix, int itemsetLength, int support)
         {
-            Result.Add(new Itemset<T>
+            ItemsetWriter.SaveItemset(new Itemset<T>
             {
                 Support = support,
-                Value = prefix.Take(itemsetLength).ToList()
+                Value = prefix.Take(itemsetLength).Select(i => items[i]).ToList()
             });
         }
 
         /// <summary>
         /// scan the input to calculate the support of single items
         /// </summary>
-        /// <param name="transactions"></param>
         /// <returns></returns>
-        private Dictionary<T, int> ScanDetermineFrequencyOfSingleItems(IEnumerable<IEnumerable<T>> transactions)
+        Dictionary<int, int> ScanDetermineFrequencyOfSingleItems()
         {
-            var result = new Dictionary<T, int>();
+            var result = new Dictionary<int, int>();
 
             foreach (var transaction in transactions)
             {

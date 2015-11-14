@@ -41,8 +41,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookAuthor.cs" />
+    <Compile Include="BookAuthorItemsetReaderWriter.cs" />
+    <Compile Include="BookAuthorRuleWriter.cs" />
+    <Compile Include="BookAuthorTransactionsReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FrequentDataMining\FrequentDataMining.csproj">
+      <Project>{441d643a-f963-4bbe-a4b6-5aa5c0706cda}</Project>
+      <Name>FrequentDataMining</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

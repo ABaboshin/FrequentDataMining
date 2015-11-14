@@ -42,7 +42,12 @@
   <ItemGroup>
     <Compile Include="AgrawalFaster\AgrawalFaster.cs" />
     <Compile Include="Apriori\Apriori.cs" />
+    <Compile Include="Common\AssociationRuleLearningAlgorithm.cs" />
     <Compile Include="Common\Itemset.cs" />
+    <Compile Include="Interfaces\IItemsetReader.cs" />
+    <Compile Include="Interfaces\IItemsetWriter.cs" />
+    <Compile Include="Interfaces\IRuleWriter.cs" />
+    <Compile Include="Interfaces\ITransactionsReader.cs" />
     <Compile Include="Common\ListExtensions.cs" />
     <Compile Include="AgrawalFaster\Rule.cs" />
     <Compile Include="Common\TypeRegister.cs" />
@@ -51,6 +56,7 @@
     <Compile Include="FPGrowth\FPTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

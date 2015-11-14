@@ -1,73 +1,87 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
 
 namespace FrequentDataMining.Apriori
 {
-    public class Apriori<T>
+    public class Apriori<T> : AssociationRuleLearningAlgorithm<T>
     {
-        public List<Itemset<T>> ProcessTransaction(double minSupport, IEnumerable<IEnumerable<T>> transactions)
+        public override void ProcessTransactions()
         {
-            if (TypeRegister.GetSorter<T>() == null || TypeRegister.GetComparer<T>() == null)
+            Prepare();
+
+            var frequentItems = GetL1FrequentItems();
+            //var allFrequentItems = new List<Itemset<int>>();
+
+            foreach (var frequentItem in frequentItems)
             {
-                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+                SaveItemset(frequentItem);
             }
 
-            var items = transactions.SelectMany(t => t).Distinct();
-            var frequentItems = GetL1FrequentItems(minSupport, items, transactions);
-            var allFrequentItems = new List<Itemset<T>>();
-            allFrequentItems.AddRange(frequentItems);
-            var candidates = new Dictionary<List<T>, double>();
-            var transactionsCount = transactions.Count();
+            //allFrequentItems.AddRange(frequentItems);
+            var candidates = new Dictionary<List<int>, double>();
 
             do
             {
-                candidates = GenerateCandidates(frequentItems, transactions);
-                frequentItems = GetFrequentItems(candidates, minSupport, transactionsCount);
-                allFrequentItems.AddRange(frequentItems);
+                candidates = GenerateCandidates(frequentItems);
+                frequentItems = GetFrequentItems(candidates);
+                foreach (var frequentItem in frequentItems)
+                {
+                    SaveItemset(frequentItem);
+                }
+                //allFrequentItems.AddRange(frequentItems);
             }
             while (candidates.Count != 0);
 
-            return allFrequentItems;
+            //return allFrequentItems;
         }
 
-        
-        List<Itemset<T>> GetFrequentItems(IDictionary<List<T>, double> candidates, double minSupport, double transactionsCount)
+        void SaveItemset(Itemset<int> itemset)
         {
-            var frequentItems = new List<Itemset<T>>();
+            ItemsetWriter.SaveItemset(new Itemset<T>
+            {
+                Support = itemset.Support,
+                Value = itemset.Value.Select(i => items[i]).ToList()
+            });
+        }
+
+        List<Itemset<int>> GetFrequentItems(IDictionary<List<int>, double> candidates)
+        {
+            var frequentItems = new List<Itemset<int>>();
 
             foreach (var item in candidates)
             {
-                if (item.Value / transactionsCount >= minSupport)
+                if (item.Value / transactions.Count() >= MinSupport)
                 {
-                    frequentItems.Add(new Itemset<T> { Value = item.Key, Support = (int)item.Value });
+                    frequentItems.Add(new Itemset<int> { Value = item.Key, Support = (int)item.Value });
                 }
             }
 
             return frequentItems;
         }
 
-        private Dictionary<List<T>, double> GenerateCandidates(IList<Itemset<T>> frequentItems, IEnumerable<IEnumerable<T>> transactions)
+        private Dictionary<List<int>, double> GenerateCandidates(IList<Itemset<int>> frequentItems)
         {
-            var candidates = new Dictionary<List<T>, double>();
+            var candidates = new Dictionary<List<int>, double>();
 
-            for (int i = 0; i < frequentItems.Count - 1; i++)
+            for (var i = 0; i < frequentItems.Count - 1; i++)
             {
                 var sorter = TypeRegister.GetSorter<T>();
-                var firstItem = sorter(frequentItems[i].Value).ToList();
+                var firstItem = frequentItems[i].Value.ToList();
+                firstItem.Sort();
 
-                for (int j = i + 1; j < frequentItems.Count; j++)
+                for (var j = i + 1; j < frequentItems.Count; j++)
                 {
-                    var secondItem = sorter(frequentItems[j].Value).ToList();
+                    var secondItem = frequentItems[j].Value.ToList();
+                    secondItem.Sort();
                     var generatedCandidate = GenerateCandidate(firstItem, secondItem);
 
                     if (generatedCandidate.Any())
                     {
-                        var support = GetSupport(generatedCandidate, transactions);
+                        var support = GetSupport(generatedCandidate);
                         candidates.Add(generatedCandidate, support);
                     }
                 }
@@ -76,7 +90,7 @@ namespace FrequentDataMining.Apriori
             return candidates;
         }
 
-        List<T> GenerateCandidate(List<T> firstItem, List<T> secondItem)
+        List<int> GenerateCandidate(List<int> firstItem, List<int> secondItem)
         {
             var length = firstItem.Count();
 
@@ -91,36 +105,37 @@ namespace FrequentDataMining.Apriori
 
                 if (firstSubString.Equal(secondSubString))
                 {
-                    return firstItem.Concat(new List<T> { secondItem.Last() }).ToList();
+                    return firstItem.Concat(new List<int> { secondItem.Last() }).ToList();
                 }
 
-                return new List<T>();
+                return new List<int>();
             }
         }
 
-        List<Itemset<T>> GetL1FrequentItems(double minSupport, IEnumerable<T> items, IEnumerable<IEnumerable<T>> transactions)
+        List<Itemset<int>> GetL1FrequentItems()
         {
-            var frequentItemsL1 = new List<Itemset<T>>();
+            var frequentItemsL1 = new List<Itemset<int>>();
             var transactionsCount = transactions.Count();
 
-            foreach (var item in items)
+            for (int item = 0; item < items.Count(); item++)
             {
-                var support = GetSupport(new List<T> { item }, transactions);
+                var support = GetSupport(new List<int> { item });
 
-                if (support / transactionsCount >= minSupport)
+                if (support / transactionsCount >= MinSupport)
                 {
-                    frequentItemsL1.Add(new Itemset<T> { Value = new List<T> { item }, Support = (int)support });
+                    frequentItemsL1.Add(new Itemset<int> { Value = new List<int> { item }, Support = (int)support });
                 }
             }
+
             frequentItemsL1.Sort();
             return frequentItemsL1;
         }
 
-        double GetSupport(List<T> generatedCandidate, IEnumerable<IEnumerable<T>> transactionsList)
+        double GetSupport(List<int> generatedCandidate)
         {
             double support = 0;
 
-            foreach (var transaction in transactionsList)
+            foreach (var transaction in transactions)
             {
                 if (CheckIsSubset(generatedCandidate, transaction))
                 {
@@ -131,9 +146,9 @@ namespace FrequentDataMining.Apriori
             return support;
         }
 
-        bool CheckIsSubset(IEnumerable<T> child, IEnumerable<T> parent)
+        bool CheckIsSubset(IEnumerable<int> child, IEnumerable<int> parent)
         {
-            return child.All(c => parent.Contains(c));
+            return child.All(parent.Contains);
         }
     }
 }

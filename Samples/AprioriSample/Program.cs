@@ -29,20 +29,40 @@ namespace AprioriSample
             */
 
             TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name));
-            
-            var data = new SampleHelper();
 
-            var result = new Apriori<BookAuthor>().ProcessTransaction(0.01, data.Transactions);
-            foreach (var item in result.OrderByDescending(v => v.Support))
+            var itemsetReaderWriter = new BookAuthorItemsetReaderWriter();
+            var transactionsReader = new BookAuthorTransactionsReader();
+
+            var apriori = new Apriori<BookAuthor>
+            {
+                MinSupport = (double) 1/9,
+                ItemsetWriter = itemsetReaderWriter,
+                TransactionsReader = transactionsReader
+            };
+
+            apriori.ProcessTransactions();
+
+            var ruleWriter = new BookAuthorRuleWriter();
+
+            var agrawal = new AgrawalFaster<BookAuthor>
+            {
+                MinLift = 0.01,
+                MinConfidence = 0.01,
+                TransactionsCount = transactionsReader.GetTransactions().Count(),
+                ItemsetReader = itemsetReaderWriter,
+                RuleWriter = ruleWriter
+            };
+
+            agrawal.Run();
+
+            foreach (var item in itemsetReaderWriter.Itemsets.OrderByDescending(v => v.Support))
             {
                 Console.WriteLine(string.Join("; ", item.Value.OrderBy(i => i.Name)) + " #SUP: " + item.Support);
             }
 
-            var agrawal = new AgrawalFaster<BookAuthor>();
-            var ar = agrawal.Run(0.01, 0.01, result, data.Transactions.Count);
             Console.WriteLine("====");
 
-            foreach (var item in ar.OrderByDescending(r => r.Confidence))
+            foreach (var item in ruleWriter.Rules.OrderByDescending(r => r.Confidence))
             {
                 Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> Confidence: " + item.Confidence + " Lift: " + item.Lift);
             }

@@ -44,6 +44,14 @@ namespace FrequentDataMining.Common
                 return list.OrderBy(l => l, new Comparer<T>());
             };
         }
+
+        internal static void EnsureType<T>()
+        {
+            if (!Compares.ContainsKey(typeof(T)))
+            {
+                throw new NotImplementedException("You need register the type at first by calling the FrequentDataMining.Common.Register()");
+            }
+        }
     }
 
     class Comparer<T> : IComparer<T>

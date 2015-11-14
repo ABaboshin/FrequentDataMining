@@ -18,7 +18,7 @@ namespace SamplesCommon
         /// <summary>
         /// transaction
         /// </summary>
-        public List<List<BookAuthor>> Transactions { get; set; }
+        public IEnumerable<IEnumerable<BookAuthor>> Transactions { get; set; }
 
         public SampleHelper()
         {
