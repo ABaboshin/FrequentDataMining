@@ -19,7 +19,7 @@ namespace FrequentDataMining.XamarinSample
 			};
 		}
 
-		List<List<BookAuthor>> transactions = new SampleHelper().Transactions;
+		IEnumerable<IEnumerable<BookAuthor>> transactions = new SampleHelper().Transactions;
 
 		TableViewDelegate tableViewDelegate;
 

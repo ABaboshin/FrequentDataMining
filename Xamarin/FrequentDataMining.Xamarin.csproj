@@ -46,9 +46,6 @@
     <Compile Include="..\FrequentDataMining\Common\ListExtensions.cs">
       <Link>Common\ListExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\FrequentDataMining\Common\Sorter.cs">
-      <Link>Common\Sorter.cs</Link>
-    </Compile>
     <Compile Include="..\FrequentDataMining\FPGrowth\FPGrowth.cs">
       <Link>FPGrowth\FPGrowth.cs</Link>
     </Compile>
@@ -58,6 +55,24 @@
     <Compile Include="..\FrequentDataMining\FPGrowth\FPTree.cs">
       <Link>FPGrowth\FPTree.cs</Link>
     </Compile>
+    <Compile Include="..\FrequentDataMining\Interfaces\IItemsetReader.cs">
+      <Link>Interfaces\IItemsetReader.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Interfaces\IItemsetWriter.cs">
+      <Link>Interfaces\IItemsetWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Interfaces\IRuleWriter.cs">
+      <Link>Interfaces\IRuleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Interfaces\ITransactionsReader.cs">
+      <Link>Interfaces\ITransactionsReader.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Common\AssociationRuleLearningAlgorithm.cs">
+      <Link>Common\AssociationRuleLearningAlgorithm.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Common\TypeRegister.cs">
+      <Link>Common\TypeRegister.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -65,5 +80,6 @@
     <Folder Include="Common\" />
     <Folder Include="FPGrowth\" />
     <Folder Include="AgrawalFaster\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 </Project>

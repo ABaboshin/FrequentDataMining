@@ -112,6 +112,15 @@
       <DependentUpon>FrequentRulesTableViewCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\FrequentRulesTableViewDelegate.cs" />
+    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorItemsetReaderWriter.cs">
+      <Link>Data\BookAuthorItemsetReaderWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorRuleWriter.cs">
+      <Link>Data\BookAuthorRuleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorTransactionsReader.cs">
+      <Link>Data\BookAuthorTransactionsReader.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

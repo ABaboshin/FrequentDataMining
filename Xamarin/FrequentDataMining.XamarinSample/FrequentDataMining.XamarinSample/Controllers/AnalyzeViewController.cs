@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Foundation;
 using FrequentDataMining.AgrawalFaster;
+using FrequentDataMining.Common;
 using FrequentDataMining.FPGrowth;
 using SamplesCommon;
 using UIKit;
@@ -18,29 +19,49 @@ namespace FrequentDataMining.XamarinSample
 		{
 		}
 
-		public List<List<BookAuthor>> Transactions {
+		public IEnumerable<IEnumerable<BookAuthor>> Transactions {
 			get;
 			set;
 		}
 
 		public override void ViewDidLoad ()
 		{
-            FrequentDataMining.Common.TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name)); ;
+			TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name));
 
-            var fpGrowth = new FPGrowth<BookAuthor>();
-			var result = fpGrowth.ProcessTransactions((double)1/9, Transactions);
+			var itemsetReaderWriter = new BookAuthorItemsetReaderWriter();
+			var transactionsReader = new BookAuthorTransactionsReader();
+
+			var fpGrowth = new FPGrowth<BookAuthor>
+			{
+				MinSupport = (double) 1/9,
+				ItemsetWriter = itemsetReaderWriter,
+				TransactionsReader = transactionsReader
+			};
+
+			fpGrowth.ProcessTransactions();
+
+			var ruleWriter = new BookAuthorRuleWriter();
+
+			var agrawal = new AgrawalFaster<BookAuthor>
+			{
+				MinLift = 0.01,
+				MinConfidence = 0.01,
+				TransactionsCount = transactionsReader.GetTransactions().Count(),
+				ItemsetReader = itemsetReaderWriter,
+				RuleWriter = ruleWriter
+			};
+
+			agrawal.Run();
 
 			FrequentItemsTable.RegisterClassForCellReuse (typeof(FrequentItemTableViewCell), FrequentTableViewDelegate.CellIdentifier);
 			FrequentItemsTable.Source = new FrequentTableViewDelegate{ 
-				GetData = () => result.OrderByDescending(i=>i.Support).ToList()
+				GetData = () => itemsetReaderWriter.Itemsets.OrderByDescending(i=>i.Support).ToList()
 			};
 
-			var agrawal = new AgrawalFaster<BookAuthor>();
-			var ar = agrawal.Run(0.01, 0.01, result, Transactions.Count);
 
 			FrequentRulesTable.RegisterClassForCellReuse (typeof(FrequentRulesTableViewCell), FrequentRulesTableViewDelegate.CellIdentifier);
 			FrequentRulesTable.Source = new FrequentRulesTableViewDelegate{ 
-				GetData = () => ar.OrderByDescending(i=>i.Confidence).ToList()
+				GetData = () => ruleWriter.Rules.OrderByDescending(i=>i.Confidence).ToList()
 			};
 		}
 	}
