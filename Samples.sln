@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesCommon", "Samples\Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkovSample", "Samples\MarkovSample\MarkovSample.csproj", "{442DDC8D-D4BE-4596-9D75-AD787E7B72B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBScanSample", "Samples\DBScanSample\DBScanSample.csproj", "{326609F9-9FA0-47AE-8F5D-720905AAA82E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{442DDC8D-D4BE-4596-9D75-AD787E7B72B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{442DDC8D-D4BE-4596-9D75-AD787E7B72B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{442DDC8D-D4BE-4596-9D75-AD787E7B72B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{326609F9-9FA0-47AE-8F5D-720905AAA82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{326609F9-9FA0-47AE-8F5D-720905AAA82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{326609F9-9FA0-47AE-8F5D-720905AAA82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{326609F9-9FA0-47AE-8F5D-720905AAA82E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
