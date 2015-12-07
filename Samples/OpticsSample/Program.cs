@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Clustering.Common.DistanceFunctions;
-using FrequentDataMining.Clustering.DBScan;
+using FrequentDataMining.Clustering.OPTICS;
 
-namespace DBScanSample
+namespace OpticsSample
 {
     class Program
     {
@@ -32,16 +32,16 @@ namespace DBScanSample
                 new List<double> { 8, 7 },
             };
 
-            var dbscan = new DBScan();
-            dbscan.DistanceFunction = new DistanceEuclidian();
-            dbscan.MinPts = 2;
-            dbscan.Epsilon = 0.29;
-            dbscan.Run(points);
+            var optics = new OPTICS();
+            optics.DistanceFunction = new DistanceEuclidian();
+            optics.MinPts = 3;
+            optics.Epsilon = 0.4;
+            optics.Run(points);
 
-            for (var i = 0; i < dbscan.Clusters.Count(); i++)
+            for (var i = 0; i < optics.Clusters.Count(); i++)
             {
                 Console.WriteLine("Cluster #" + i);
-                foreach (var vector in dbscan.Clusters[i].Vectors)
+                foreach (var vector in optics.Clusters[i].Vectors)
                 {
                     Console.WriteLine(string.Join(" ", vector));
                 }

@@ -2,6 +2,7 @@
 // (c) 2015, Andrey Baboshin
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.AgrawalFaster;
 using FrequentDataMining.Apriori;
@@ -30,39 +31,39 @@ namespace AprioriSample
 
             TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name));
 
-            var itemsetReaderWriter = new BookAuthorItemsetReaderWriter();
-            var transactionsReader = new BookAuthorTransactionsReader();
+            var itemsets = new List<Itemset<BookAuthor>>();
+            var transactions = new SampleHelper().Transactions.ToList();
 
             var apriori = new Apriori<BookAuthor>
             {
                 MinSupport = (double) 1/9,
-                ItemsetWriter = itemsetReaderWriter,
-                TransactionsReader = transactionsReader
+                SaveItemset = itemset => itemsets.Add(itemset),
+                GetTransactions = ()=> transactions
             };
 
             apriori.ProcessTransactions();
 
-            var ruleWriter = new BookAuthorRuleWriter();
+            var rules = new List<Rule<BookAuthor>>();
 
             var agrawal = new AgrawalFaster<BookAuthor>
             {
                 MinLift = 0.01,
                 MinConfidence = 0.01,
-                TransactionsCount = transactionsReader.GetTransactions().Count(),
-                ItemsetReader = itemsetReaderWriter,
-                RuleWriter = ruleWriter
+                TransactionsCount = transactions.Count(),
+                GetItemsets = ()=>itemsets,
+                SaveRule = rule=>rules.Add(rule)
             };
 
             agrawal.Run();
 
-            foreach (var item in itemsetReaderWriter.Itemsets.OrderByDescending(v => v.Support))
+            foreach (var item in itemsets.OrderByDescending(v => v.Support))
             {
                 Console.WriteLine(string.Join("; ", item.Value.OrderBy(i => i.Name)) + " #SUP: " + item.Support);
             }
 
             Console.WriteLine("====");
 
-            foreach (var item in ruleWriter.Rules.OrderByDescending(r => r.Confidence))
+            foreach (var item in rules.OrderByDescending(r => r.Confidence))
             {
                 Console.WriteLine(string.Join("; ", item.Combination) + " => " + string.Join("; ", item.Remaining) + " ===> Confidence: " + item.Confidence + " Lift: " + item.Lift);
             }

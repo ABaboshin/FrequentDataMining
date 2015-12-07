@@ -18,7 +18,7 @@ namespace FrequentDataMining.Apriori
 
             foreach (var frequentItem in frequentItems)
             {
-                SaveItemset(frequentItem);
+                SaveItemsetCaller(frequentItem);
             }
 
             //allFrequentItems.AddRange(frequentItems);
@@ -30,7 +30,7 @@ namespace FrequentDataMining.Apriori
                 frequentItems = GetFrequentItems(candidates);
                 foreach (var frequentItem in frequentItems)
                 {
-                    SaveItemset(frequentItem);
+                    SaveItemsetCaller(frequentItem);
                 }
                 //allFrequentItems.AddRange(frequentItems);
             }
@@ -39,9 +39,9 @@ namespace FrequentDataMining.Apriori
             //return allFrequentItems;
         }
 
-        void SaveItemset(Itemset<int> itemset)
+        void SaveItemsetCaller(Itemset<int> itemset)
         {
-            ItemsetWriter.SaveItemset(new Itemset<T>
+            SaveItemset(new Itemset<T>
             {
                 Support = itemset.Support,
                 Value = itemset.Value.Select(i => items[i]).ToList()

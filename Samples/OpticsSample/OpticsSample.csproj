@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{441D643A-F963-4BBE-A4B6-5AA5C0706CDA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{E7AF9A3C-67D5-4C84-B68F-76E14D2FD0B1}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FrequentDataMining</RootNamespace>
-    <AssemblyName>FrequentDataMining</AssemblyName>
+    <RootNamespace>OpticsSample</RootNamespace>
+    <AssemblyName>OpticsSample</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,33 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgrawalFaster\AgrawalFaster.cs" />
-    <Compile Include="Apriori\Apriori.cs" />
-    <Compile Include="Clustering\Common\AbstractClusteringAlgorithm.cs" />
-    <Compile Include="Clustering\Common\KNNPoint.cs" />
-    <Compile Include="Clustering\OPTICS\OPTICS.cs" />
-    <Compile Include="Clustering\OPTICS\PriorityQueue.cs" />
-    <Compile Include="Clustering\OPTICS\VectorDataOptics.cs" />
-    <Compile Include="Common\AssociationRuleLearningAlgorithm.cs" />
-    <Compile Include="Clustering\Common\DistanceFunctions\DistanceEuclidian.cs" />
-    <Compile Include="Common\Itemset.cs" />
-    <Compile Include="Clustering\DBScan\Cluster.cs" />
-    <Compile Include="Clustering\DBScan\DBScan.cs" />
-    <Compile Include="Clustering\Common\DistanceFunctions\AbstractDistanceFunction.cs" />
-    <Compile Include="Clustering\Common\KDNode.cs" />
-    <Compile Include="Clustering\Common\KDTree.cs" />
-    <Compile Include="Clustering\Common\VectorData.cs" />
-    <Compile Include="Common\ListExtensions.cs" />
-    <Compile Include="AgrawalFaster\Rule.cs" />
-    <Compile Include="Common\TypeRegister.cs" />
-    <Compile Include="FPGrowth\FPGrowth.cs" />
-    <Compile Include="FPGrowth\FPNode.cs" />
-    <Compile Include="FPGrowth\FPTree.cs" />
-    <Compile Include="Markov\MarkovPredictor.cs" />
-    <Compile Include="Markov\MarkovState.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FrequentDataMining\FrequentDataMining.csproj">
+      <Project>{441d643a-f963-4bbe-a4b6-5aa5c0706cda}</Project>
+      <Name>FrequentDataMining</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

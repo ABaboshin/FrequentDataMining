@@ -93,7 +93,7 @@ namespace FrequentDataMining.FPGrowth
                     prefix[prefixLength] = item;
 
                     var betaSupport = (prefixSupport < support) ? prefixSupport : support;
-                    SaveItemset(prefix, prefixLength + 1, betaSupport);
+                    SaveItemsetCaller(prefix, prefixLength + 1, betaSupport);
 
                     var prefixPaths = new List<List<FPNode>>();
                     FPNode path = null;
@@ -167,13 +167,13 @@ namespace FrequentDataMining.FPGrowth
                     }
                 }
 
-                SaveItemset(prefix, newPrefixLength, support);
+                SaveItemsetCaller(prefix, newPrefixLength, support);
             }
         }
 
-        void SaveItemset(IEnumerable<int> prefix, int itemsetLength, int support)
+        void SaveItemsetCaller(IEnumerable<int> prefix, int itemsetLength, int support)
         {
-            ItemsetWriter.SaveItemset(new Itemset<T>
+            SaveItemset(new Itemset<T>
             {
                 Support = support,
                 Value = prefix.Take(itemsetLength).Select(i => items[i]).ToList()

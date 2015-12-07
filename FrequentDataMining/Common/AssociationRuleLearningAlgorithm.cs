@@ -1,9 +1,9 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using FrequentDataMining.Interfaces;
 
 namespace FrequentDataMining.Common
 {
@@ -11,9 +11,9 @@ namespace FrequentDataMining.Common
     {
         public double MinSupport { get; set; }
 
-        public ITransactionsReader<T> TransactionsReader { get; set; }
+        public Func<IEnumerable<IEnumerable<T>>> GetTransactions { get; set; }
 
-        public IItemsetWriter<T> ItemsetWriter { get; set; }
+        public Action<Itemset<T>> SaveItemset { get; set; }
 
         public abstract void ProcessTransactions();
 
@@ -24,7 +24,7 @@ namespace FrequentDataMining.Common
 
             transactions = new List<List<int>>();
             items = new List<T>();
-            foreach (var transaction in TransactionsReader.GetTransactions())
+            foreach (var transaction in GetTransactions())
             {
                 transactions.Add(
                     transaction.Select(GetItemIdx).ToList()

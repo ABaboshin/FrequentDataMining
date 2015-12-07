@@ -1,10 +1,10 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
-using FrequentDataMining.Interfaces;
 
 namespace FrequentDataMining.AgrawalFaster
 {
@@ -18,9 +18,9 @@ namespace FrequentDataMining.AgrawalFaster
 
         public double MinLift { get; set; }
 
-        public IItemsetReader<T> ItemsetReader { get; set; }
+        public Func<IEnumerable<Itemset<T>>> GetItemsets { get; set; }
 
-        public IRuleWriter<T> RuleWriter { get; set; }
+        public Action<Rule<T>> SaveRule { get; set; }
 
         public int TransactionsCount { get; set; }
 
@@ -31,7 +31,7 @@ namespace FrequentDataMining.AgrawalFaster
 
             allFrequentItems = new List<Itemset<int>>();
             items = new List<T>();
-            foreach (var itemset in ItemsetReader.GetItemsets())
+            foreach (var itemset in GetItemsets())
             {
                 allFrequentItems.Add(new Itemset<int>
                 {
@@ -145,7 +145,7 @@ namespace FrequentDataMining.AgrawalFaster
             if (confidence >= MinConfidence && lift >= MinLift)
             {
                 var newRule = new Rule<int>(rule.Combination, rule.Remaining, confidence, lift);
-                SaveRule(newRule);
+                SaveRuleCaller(newRule);
             }
 
             confidence = GetConfidence(rule.Remaining, XY);
@@ -154,13 +154,13 @@ namespace FrequentDataMining.AgrawalFaster
             if (confidence >= MinConfidence && lift >= MinLift)
             {
                 var newRule = new Rule<int>(rule.Remaining, rule.Combination, confidence, lift);
-                SaveRule(newRule);
+                SaveRuleCaller(newRule);
             }
         }
 
-        private void SaveRule(Rule<int> rule)
+        private void SaveRuleCaller(Rule<int> rule)
         {
-            RuleWriter.SaveRule(new Rule<T>
+            SaveRule(new Rule<T>
             {
                 Lift = rule.Lift,
                 Confidence = rule.Confidence,

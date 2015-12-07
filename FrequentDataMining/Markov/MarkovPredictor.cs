@@ -1,10 +1,10 @@
 ﻿// MIT License.
 // (c) 2015, Andrey Baboshin
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FrequentDataMining.Common;
-using FrequentDataMining.Interfaces;
 
 namespace FrequentDataMining.Markov
 {
@@ -20,9 +20,9 @@ namespace FrequentDataMining.Markov
             TypeRegister.Register<int>((a, b) => { return a.CompareTo(b); });
         }
 
-        public bool Train(ITransactionsReader<T> sequenceReader)
+        public bool Train(Func<IEnumerable<IEnumerable<T>>> getTransactions)
         {
-            foreach (var seq in sequenceReader.GetTransactions())
+            foreach (var seq in getTransactions())
             {
                 var mappedItems = seq.Select(GetItemIdx).ToList();
                 

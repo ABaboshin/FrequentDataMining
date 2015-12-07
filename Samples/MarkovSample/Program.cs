@@ -21,7 +21,7 @@ namespace MarkovSample
             TypeRegister.Register<BookAuthor>((a, b) => a.Name.CompareTo(b.Name));
 
             var markov = new MarkovPredictor<BookAuthor> {K = 5};
-            markov.Train(new BookAuthorTransactionsReader());
+            markov.Train(()=> new SampleHelper().Transactions);
             var sequence = markov.Predict(new List<BookAuthor>
                 {
                     new BookAuthor("Hesse"),
