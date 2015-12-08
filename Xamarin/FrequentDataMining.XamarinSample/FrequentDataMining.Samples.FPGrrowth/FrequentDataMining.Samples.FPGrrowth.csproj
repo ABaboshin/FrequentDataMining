@@ -4,11 +4,11 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{9E416308-1B8B-4B28-91FB-479AC9B00B91}</ProjectGuid>
+    <ProjectGuid>{874D4222-F49A-4E96-A4D4-0F5DB2A32808}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FrequentDataMining.XamarinSample</RootNamespace>
+    <RootNamespace>FrequentDataMining.Samples.FPGrrowth</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>FrequentDataMining.XamarinSample</AssemblyName>
+    <AssemblyName>FrequentDataMining.Samples.FPGrrowth</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
-    <InterfaceDefinition Include="Sotryboard\Main.storyboard" />
+    <InterfaceDefinition Include="Storyboard\Main.storyboard" />
     <InterfaceDefinition Include="Views\CellView.xib" />
     <InterfaceDefinition Include="Views\FrequentItemTableViewCell.xib" />
     <InterfaceDefinition Include="Views\FrequentRulesTableViewCell.xib" />
@@ -81,16 +81,19 @@
     <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="Main.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppDelegate.cs">
+      <DependentUpon>AppDelegate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\AnalyzeViewController.cs" />
+    <Compile Include="Controllers\AnalyzeViewController.designer.cs">
+      <DependentUpon>..\..\FrequentDataMining.XamarinSample\Controllers\AnalyzeViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\MainViewController.designer.cs">
-      <DependentUpon>MainViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Logic\TableViewDelegate.cs" />
-    <Compile Include="Views\CellView.cs" />
-    <Compile Include="Views\CellView.designer.cs">
-      <DependentUpon>CellView.cs</DependentUpon>
+      <DependentUpon>..\..\FrequentDataMining.XamarinSample\Controllers\MainViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthor.cs">
       <Link>Data\BookAuthor.cs</Link>
@@ -98,36 +101,24 @@
     <Compile Include="..\..\..\Samples\SamplesCommon\SampleHelper.cs">
       <Link>Data\SampleHelper.cs</Link>
     </Compile>
-    <Compile Include="Controllers\AnalyzeViewController.cs" />
-    <Compile Include="Controllers\AnalyzeViewController.designer.cs">
-      <DependentUpon>AnalyzeViewController.cs</DependentUpon>
+    <Compile Include="Logic\FrequentRulesTableViewDelegate.cs" />
+    <Compile Include="Logic\FrequentTableViewDelegate.cs" />
+    <Compile Include="Logic\TableViewDelegate.cs" />
+    <Compile Include="Views\CellView.cs" />
+    <Compile Include="Views\CellView.designer.cs">
+      <DependentUpon>..\..\FrequentDataMining.XamarinSample\Views\CellView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\FrequentItemTableViewCell.cs" />
     <Compile Include="Views\FrequentItemTableViewCell.designer.cs">
-      <DependentUpon>FrequentItemTableViewCell.cs</DependentUpon>
+      <DependentUpon>..\..\FrequentDataMining.XamarinSample\Views\FrequentItemTableViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\FrequentTableViewDelegate.cs" />
     <Compile Include="Views\FrequentRulesTableViewCell.cs" />
     <Compile Include="Views\FrequentRulesTableViewCell.designer.cs">
-      <DependentUpon>FrequentRulesTableViewCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Logic\FrequentRulesTableViewDelegate.cs" />
-    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorItemsetReaderWriter.cs">
-      <Link>Data\BookAuthorItemsetReaderWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorRuleWriter.cs">
-      <Link>Data\BookAuthorRuleWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Samples\SamplesCommon\BookAuthorTransactionsReader.cs">
-      <Link>Data\BookAuthorTransactionsReader.cs</Link>
+      <DependentUpon>..\..\FrequentDataMining.XamarinSample\Views\FrequentRulesTableViewCell.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Sotryboard\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
-    <Folder Include="Logic\" />
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>

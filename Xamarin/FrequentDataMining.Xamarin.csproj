@@ -55,23 +55,53 @@
     <Compile Include="..\FrequentDataMining\FPGrowth\FPTree.cs">
       <Link>FPGrowth\FPTree.cs</Link>
     </Compile>
-    <Compile Include="..\FrequentDataMining\Interfaces\IItemsetReader.cs">
-      <Link>Interfaces\IItemsetReader.cs</Link>
-    </Compile>
-    <Compile Include="..\FrequentDataMining\Interfaces\IItemsetWriter.cs">
-      <Link>Interfaces\IItemsetWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\FrequentDataMining\Interfaces\IRuleWriter.cs">
-      <Link>Interfaces\IRuleWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\FrequentDataMining\Interfaces\ITransactionsReader.cs">
-      <Link>Interfaces\ITransactionsReader.cs</Link>
-    </Compile>
     <Compile Include="..\FrequentDataMining\Common\AssociationRuleLearningAlgorithm.cs">
       <Link>Common\AssociationRuleLearningAlgorithm.cs</Link>
     </Compile>
     <Compile Include="..\FrequentDataMining\Common\TypeRegister.cs">
       <Link>Common\TypeRegister.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\DistanceFunctions\AbstractDistanceFunction.cs">
+      <Link>Clustering\Common\DistanceFunctions\AbstractDistanceFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\DistanceFunctions\DistanceEuclidian.cs">
+      <Link>Clustering\Common\DistanceFunctions\DistanceEuclidian.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\AbstractClusteringAlgorithm.cs">
+      <Link>Clustering\Common\AbstractClusteringAlgorithm.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\KDNode.cs">
+      <Link>Clustering\Common\KDNode.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\KDTree.cs">
+      <Link>Clustering\Common\KDTree.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\KNNPoint.cs">
+      <Link>Clustering\Common\KNNPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\Common\VectorData.cs">
+      <Link>Clustering\Common\VectorData.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\DBScan\Cluster.cs">
+      <Link>Clustering\DBScan\Cluster.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\DBScan\DBScan.cs">
+      <Link>Clustering\DBScan\DBScan.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\OPTICS\OPTICS.cs">
+      <Link>Clustering\OPTICS\OPTICS.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\OPTICS\PriorityQueue.cs">
+      <Link>Clustering\OPTICS\PriorityQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Clustering\OPTICS\VectorDataOptics.cs">
+      <Link>Clustering\OPTICS\VectorDataOptics.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Markov\MarkovPredictor.cs">
+      <Link>Markov\MarkovPredictor.cs</Link>
+    </Compile>
+    <Compile Include="..\FrequentDataMining\Markov\MarkovState.cs">
+      <Link>Markov\MarkovState.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
@@ -80,6 +110,11 @@
     <Folder Include="Common\" />
     <Folder Include="FPGrowth\" />
     <Folder Include="AgrawalFaster\" />
-    <Folder Include="Interfaces\" />
+    <Folder Include="Clustering\" />
+    <Folder Include="Clustering\Common\" />
+    <Folder Include="Clustering\Common\DistanceFunctions\" />
+    <Folder Include="Clustering\DBScan\" />
+    <Folder Include="Clustering\OPTICS\" />
+    <Folder Include="Markov\" />
   </ItemGroup>
 </Project>
