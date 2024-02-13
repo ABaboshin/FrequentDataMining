@@ -46,6 +46,8 @@ namespace OpticsSample
                     Console.WriteLine(string.Join(" ", vector));
                 }
             }
+
+            Console.ReadLine();
         }
     }
 }

@@ -32,6 +32,8 @@ namespace MarkovSample
             {
                 Console.WriteLine(bookAuthor.Name);
             }
+
+            Console.ReadLine();
         }
     }
 }

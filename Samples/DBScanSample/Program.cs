@@ -46,6 +46,8 @@ namespace DBScanSample
                     Console.WriteLine(string.Join(" ", vector));
                 }
             }
+
+            Console.ReadLine();
         }
     }
 }
